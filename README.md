@@ -15,9 +15,8 @@
 | :--------------------------------- | :------------------------------ | :-------------------------------------------------------- |
 | **추상 팩토리 패턴** (Abstract Factory)   | 뉴스 요약 생성기 (GPT 요약, TextRank 요약) | 다양한 요약 알고리즘을 선택적으로 적용 가능<br>요약 방식 변경 시 코드 수정 최소화          |
 | **옵저버 패턴** (Observer)              | 메일 전송 성공/실패 알림 처리               | 메일 전송 결과를 이벤트 기반으로 사용자에게 전달<br>발송 로직과 알림 로직을 분리           |
-| **MVC 패턴** (Model-View-Controller) | Django 웹 애플리케이션 구조화             | 데이터(Model), 화면(View), 로직(Controller) 분리<br>유지보수성과 확장성 향상  |
+| **MVC 패턴** (Model-View-Controller) | Django 웹 애플리케이션 구조화             | Model, View, Controller 분리<br>유지보수성과 확장성 향상  |
 | **전략 패턴** (Strategy)               | 뉴스 요약 방식 선택 처리                  | 실행 시점에 다양한 요약 알고리즘(GPT, TextRank 등)을 선택 가능<br>요약 로직 교체 용이 |
-| **싱글턴 패턴** (Singleton)             | 메일 서버 연결 객체 관리 (SMTP 서버)        | 메일 서버 연결을 단 한 번만 생성하여 재사용<br>리소스 절약 및 효율적인 연결 관리          |
 | **프록시 패턴** (Proxy)                 | 외부 API(OpenAI API) 호출 최적화       | API 호출 전에 요청 제한, 캐싱 등 부가기능 추가<br>API 부하 감소                |
 | **템플릿 메서드 패턴** (Template Method)   | 뉴스 크롤링 프로세스 기본 구조 설계            | 기본 크롤링 로직은 고정하고, 사이트별 차이만 하위 클래스에서 구현<br>다양한 언론사 대응 가능    |
 
@@ -29,7 +28,7 @@
 ```plaintext
 1. 뉴스 입력 (직접 입력 or 크롤링)
     ↓
-2. 뉴스 요약 (요약 팩토리를 통해 다양한 요약 지원)
+2. 뉴스 요약 (OpenAI API, LLM 모델 등을 활용, 요약 팩토리를 통해 다양한 요약 지원)
     ↓
 3. 메일 주소 입력
     ↓
@@ -44,9 +43,9 @@
 
 | 역할        | 담당 업무                           | 비고                 |
 | :-------- | :------------------------------ | :----------------- |
-| 팀장 (PM)   | 프로젝트 관리, 전체 구조 설계, 발표 진행        | 발표자료 준비 주도         |
-| 백엔드 개발자 1 | 뉴스 입력/크롤링 기능 개발 + 뉴스 요약 API 연결  | 추상 팩토리 패턴 구현 담당    |
-| 백엔드 개발자 2 | 메일 발송 기능 개발 + 전송 성공 알림 (옵저버 패턴) | Django 메일 모듈 활용 예정 |
+| 팀장 (PM)   | 프로젝트 관리, 전체 구조 설계, 뉴스 요약 API 연결 및 프롬프트 리팩토링, Django 기반 웹 페이지 개발 | AI 모듈 구현 및 연결 담당, 발표자료 준비 |
+| 팀원 1 | 뉴스 입력/크롤링 기능 개발, Django 기반 웹 페이지 개발 | 추상 팩토리 패턴 구현 담당, 발표자료 준비    |
+| 팀원 2 | 메일 발송 기능 개발 + 전송 성공 알림 (옵저버 패턴), Django 기반 웹 페이지 개발 | Django 메일 모듈 활용 예정, 발표자료 준비 |
 
 ---
 
@@ -89,8 +88,9 @@ news_summary_project/
 │   ├── summary/                    # 요약 팩토리 + 요약기 구현
 │   │   ├── __init__.py
 │   │   ├── base_summary.py         # SummaryGenerator 추상 클래스
-│   │   ├── gpt_summary.py          # ChatGPT 기반 요약
-│   │   └── textrank_summary.py     # TextRank 기반 요약
+│   │   ├── gpt_summary.py          # OpenAI API 기반 요약
+│   │   ├── textrank_summary.py     # TextRank 기반 요약
+│   │   └── else_summary.py         # 다른 모델 기반 요약
 │   └── templates/
 │       └── news/
 │           ├── news_input.html     # 뉴스 입력 폼
@@ -101,16 +101,6 @@ news_summary_project/
 │   └── observer.py                  # 옵저버 패턴 알림 처리
 └── static/                          # 정적 파일 (css, js)
 ```
-
----
-
-## 🔗 참고 레퍼런스
-
-* [ChatGPT를 이용한 뉴스 요약](https://positive-impactor.tistory.com/626)
-* [크롤링 후 뉴스 요약 (Teddylee 블로그)](https://teddylee777.github.io/python/news-article/)
-* [주식 뉴스 요약 메일링 프로그램](https://myeonghak.github.io/natural%20language%20processing/NLP-주식-뉴스-요약-메일링-프로그램/)
-* [NLP 활용 뉴스 요약 가이드](https://study-yoon.tistory.com/227)
-* [News Summary - est.ai 블로그](https://blog.est.ai/2021/06/news-summary/)
 
 ---
 
@@ -126,10 +116,11 @@ news_summary_project/
 
 ---
 
-## 🚀 프로젝트 설치 및 실행 방법 (최초 버전)
+## 🔗 참고 레퍼런스
 
-* Python 3.9 이상
-* Django 4.x
-* OpenAI API Key 필요
+* [ChatGPT를 이용한 뉴스 요약](https://positive-impactor.tistory.com/626)
+* [크롤링 후 뉴스 요약 (Teddylee 블로그)](https://teddylee777.github.io/python/news-article/)
+* [주식 뉴스 요약 메일링 프로그램](https://myeonghak.github.io/natural%20language%20processing/NLP-주식-뉴스-요약-메일링-프로그램/)
+* [NLP 활용 뉴스 요약 가이드](https://study-yoon.tistory.com/227)
+* [News Summary - est.ai 블로그](https://blog.est.ai/2021/06/news-summary/)
 
-(추후 설치 방법 및 .env 파일 예시는 별도로 업데이트 예정입니다.)
