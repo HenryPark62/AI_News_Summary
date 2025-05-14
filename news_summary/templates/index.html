@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>뉴스 요약 서비스</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <h1>📰 뉴스 요약 서비스</h1>
+
+    <form method="POST" enctype="multipart/form-data" action="/start-summary" id="summary-form">
+
+        <!-- 1단계: 요약 모델 선택 (처음부터 보임) -->
+        <div class="fade-step show" id="step-1">
+            <h3>🧠 요약 모델 선택</h3>
+            <label><input type="radio" name="model" value="openai"> OpenAI GPT</label>
+            <label><input type="radio" name="model" value="together"> Together.ai 무료 모델</label>
+            <label><input type="radio" name="model" value="local"> 로컬 LLM (ollama 등)</label>
+        </div>
+
+        <!-- 2단계: 요약 스타일 선택 (기본 숨김) -->
+        <div class="fade-step hidden" id="step-2">
+            <h3>📝 요약 스타일 선택</h3>
+            <label><input type="radio" name="style" value="brief"> 간결 요약 (2~3줄)</label>
+            <label><input type="radio" name="style" value="detailed"> 상세 요약 (5~7줄)</label>
+        </div>
+
+        <!-- 3단계: 뉴스 입력 선택 (기본 숨김) -->
+        <div class="fade-step hidden" id="step-3">
+            <h3>📰 뉴스 입력</h3>
+            <div class="input-choice">
+                <div class="upload-area">
+                    <h4>📂 파일 업로드 (.txt)</h4>
+                    <input type="file" name="file" accept=".txt">
+                </div>
+
+                <div class="textarea-area">
+                    <h4>✍️ 텍스트 직접 입력</h4>
+                    <textarea name="text_content" rows="6" placeholder="뉴스 본문을 입력하세요..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- 최종 요약 시작 버튼 -->
+        <div class="start-btn">
+            <button type="submit" id="start-button" disabled>🚀 요약 시작</button>
+        </div>
+
+    </form>
+
+<script src="{{ url_for('static', filename='js/validate.js') }}"></script>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>뉴스 요약 결과</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>📊 뉴스 요약 결과</h1>
+
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div id="progress-bar"></div>
+    </div>
+
+    <!-- 퍼센트 + 스피너 -->
+    <div class="progress-status">
+        <span id="progress-text">0%</span>
+        <span class="spinner">
+            <i class="bi bi-gear-fill spin"></i>
+        </span>
+    </div>
+
+    <!-- 결과 영역 (처음 숨김) -->
+    <div id="result-section" style="margin-top: 30px; display: none;">
+        
+        <!-- 요약 결과 출력 -->
+        <h2>📝 요약 결과</h2>
+        <div id="summary-text" class="summary-box">
+            요약문이 여기에 표시됩니다.
+        </div>
+
+        <!-- 압축률 그래프 -->
+        <h2>📊 압축률 비교</h2>
+        <canvas id="bar-chart" width="400" height="300"></canvas>
+
+        <!-- 다운로드 + 메인화면으로 돌아가기 버튼 -->
+        <div class="action-buttons">
+            <a href="/download-summary"><button>📄 요약본 다운로드</button></a>
+            <a href="/"><button>🏠 메인화면으로</button></a>
+        </div>
+
+        <!-- 이메일 입력 영역 (처음에는 숨김) -->
+        <div id="email-section" class="fade-step hidden" style="margin-top: 40px;">
+            <h2>📧 이메일로 요약본 받기</h2>
+            <input type="email" id="email-input" placeholder="받을 이메일 주소 입력" required style="padding: 10px; width: 80%; max-width: 400px; margin-bottom: 10px;">
+            <div class="start-btn">
+                <button type="button" onclick="sendEmail()">📨 메일 보내기</button>
+            </div>
+        </div>
+
+    </div>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</div>
+</body>
+</html>
