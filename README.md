@@ -68,13 +68,8 @@
 
 ---
 
-## 플로우차트
 
----
-
-### UI 플로우
-
-## UI 플로우
+## 🗺️ UI 플로우
 
 ```mermaid
 flowchart TB
@@ -89,7 +84,7 @@ flowchart TB
     
 ```
 
-## 시스템 구조도 (Backend API 흐름)
+## 🏗️ 시스템 구조도 (Backend API 흐름)
 
 ```mermaid
 flowchart TD
