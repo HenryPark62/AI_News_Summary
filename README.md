@@ -74,6 +74,8 @@
 
 ### UI 플로우
 
+## 4. UI 플로우
+
 ```mermaid
 flowchart TB
     A[메인화면] --> B[모델 선택 + 요약 스타일 선택]
@@ -87,9 +89,7 @@ flowchart TB
     
 ```
 
----
-
-### 시스템 구조도 (Backend API 흐름)
+## 5. 시스템 구조도 (Backend API 흐름)
 
 ```mermaid
 flowchart TD
