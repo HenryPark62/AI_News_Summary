@@ -73,8 +73,7 @@ textarea {
     width: 100%;
     padding: 10px;
     font-size: 16px;
-    resize: none; /* ⭐ 오른쪽 모서리 드래그 막기 */
-    box-sizing: border-box; /* ⭐ padding, border 포함해서 100% 안에 맞추기 */
+    resize: vertical; /* 세로로만 확장 가능 */
 }
 
 /* 요약 시작 버튼 */
@@ -272,54 +271,15 @@ h3 {
     cursor: not-allowed;
 }
 
-@keyframes float {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-6px); }
-    100% { transform: translateY(0px); }
-  }
-  
-  #news-icon {
+
+.ai-bot {
     display: inline-block;
     animation: float 2s ease-in-out infinite;
-  }
-
-  #typing-text {
-    min-height: 30px; /* 또는 적당한 높이 */
-    display: block;
+    font-size: 28px;
 }
 
-#typing-text {
-    min-height: 30px;
-    display: block;
-    font-family: 'Courier New', Courier, monospace; /* 타이핑 느낌 살리기 (선택) */
-    white-space: pre; /* 띄어쓰기 유지 */
-}
-
-#cursor {
-    display: inline-block;
-    animation: blink 1s infinite;
-    color: black;
-}
-
-@keyframes blink {
-    0%, 50% {
-        opacity: 1;
-    }
-    50.01%, 100% {
-        opacity: 0;
-    }
-
-    
-}
-
-.fade-in-char {
-    display: inline-block;
-    opacity: 0;
-    animation: fadeIn 0.3s forwards;
-}
-
-@keyframes fadeIn {
-    to {
-        opacity: 1;
-    }
+/* 🤖 점프 애니메이션 */
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
 }

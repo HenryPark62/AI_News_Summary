@@ -3,7 +3,7 @@ import os
 import smtplib
 from email.message import EmailMessage
 from datetime import datetime
-from summarizer import summarize_news
+from summarizer import summarize_news  # 패키지화된 summarizer 사용
 
 app = Flask(__name__)
 UPLOAD_FOLDER = './uploads'
@@ -24,7 +24,7 @@ def start_summary():
     
     uploaded_file = request.files.get('file')
     input_text = request.form.get('text_content')
-    
+
     if uploaded_file and uploaded_file.filename.endswith('.txt'):
         file_path = os.path.join(UPLOAD_FOLDER, uploaded_file.filename)
         uploaded_file.save(file_path)
@@ -71,7 +71,15 @@ def get_progress():
 
 @app.route('/result')
 def result():
-    return render_template('result.html')
+    if "summary" in progress:
+        return render_template(
+            'result.html',
+            summary_result=progress["summary"],
+            original_length=progress["original_length"],
+            summary_length=progress["summary_length"]
+        )
+    else:
+        return "요약 결과가 없습니다.", 404
 
 @app.route('/download-summary')
 def download_summary():

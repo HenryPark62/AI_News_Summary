@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>News.ai - 요약 진행 중</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="container" style="text-align: center;">
+    <h1>🤖 AI가 요약중입니다...</h1>
+    <div style="font-size: 60px; animation: float 2s ease-in-out infinite;">🤖</div>
+</div>
+
+<script>
+    function checkProgress() {
+        fetch("/progress")
+            .then(response => response.json())
+            .then(data => {
+                if (data.percentage >= 100) {
+                    window.location.href = "/result";
+                } else {
+                    setTimeout(checkProgress, 1500); // 1.5초마다 계속 체크
+                }
+            })
+            .catch(error => {
+                console.error("Error checking progress:", error);
+                setTimeout(checkProgress, 3000); // 에러시 3초 후 재시도
+            });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        checkProgress();
+    });
+</script>
+
+</body>
+</html>

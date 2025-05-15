@@ -8,6 +8,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const fileInput = document.querySelector('input[name="file"]');
     const textInput = document.querySelector('textarea[name="text_content"]');
 
+    const fileNameDisplay = document.getElementById('file-name');
+    const textCountDisplay = document.getElementById('text-count');
+
+    let uploadedFileTextLength = 0;
+    let fileUploaded = false; // 파일 업로드 여부
+    let textEntered = false; // 텍스트 입력 여부
+
     function handleStepProgression() {
         const modelSelected = Array.from(modelRadios).some(radio => radio.checked);
         const styleSelected = Array.from(styleRadios).some(radio => radio.checked);
@@ -23,25 +30,106 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    function updateTextCount() {
+        const textLength = textInput.value.trim().length;
+        const totalLength = textLength + uploadedFileTextLength;
+        textCountDisplay.textContent = `${totalLength}자 입력됨`;
+    }
+
     function checkInputProvided() {
         const fileProvided = fileInput.files.length > 0;
         const textProvided = textInput.value.trim().length > 0;
 
         if (fileProvided || textProvided) {
-            startButton.disabled = false;   // 입력이 있으면 활성화
+            startButton.disabled = false;
         } else {
-            startButton.disabled = true;    // 입력 없으면 다시 비활성화
+            startButton.disabled = true;
         }
+        updateTextCount();
     }
 
-    // 단계 이동용
-    modelRadios.forEach(radio => radio.addEventListener('change', handleStepProgression));
-    styleRadios.forEach(radio => radio.addEventListener('change', handleStepProgression));
+    function resetFileUpload() {
+        fileInput.value = "";
+        fileNameDisplay.innerHTML = "";
+        uploadedFileTextLength = 0;
+        fileUploaded = false;
+        updateTextCount();
+        checkInputProvided();
+    }
 
-    // 입력 확인용
-    fileInput.addEventListener('change', checkInputProvided);
-    textInput.addEventListener('input', checkInputProvided);
+    function resetTextInput() {
+        textInput.value = "";
+        textEntered = false;
+        updateTextCount();
+        checkInputProvided();
+    }
 
-    // 초기 상태에서도 입력 상태를 체크
+    // ⭐ 추가: 모델 선택 시
+    modelRadios.forEach(radio => radio.addEventListener('change', () => {
+        handleStepProgression();
+    }));
+
+    // ⭐ 추가: 스타일 선택 시
+    styleRadios.forEach(radio => radio.addEventListener('change', () => {
+        handleStepProgression();
+    }));
+
+    // 파일 업로드
+    fileInput.addEventListener('change', () => {
+        if (fileInput.files.length > 0) {
+            if (textEntered) {
+                alert("⚠️ 텍스트가 이미 입력되어 있습니다. 파일 입력을 초기화합니다.");
+                resetFileUpload();
+            }
+
+            const file = fileInput.files[0];
+            fileNameDisplay.innerHTML = "선택된 파일: " + file.name + " <span id='remove-file' style='cursor:pointer; color:red; margin-left:5px;'>❌</span>";
+            fileUploaded = true;
+
+            if (file.type === "text/plain") {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const content = e.target.result;
+                    uploadedFileTextLength = content.trim().length;
+                    updateTextCount();
+                    checkInputProvided();
+                    handleStepProgression(); 
+                };
+                reader.readAsText(file, 'utf-8');
+            } else {
+                alert("텍스트(.txt) 파일만 업로드할 수 있습니다.");
+                resetFileUpload();
+            }
+
+            setTimeout(() => {
+                const removeBtn = document.getElementById('remove-file');
+                if (removeBtn) {
+                    removeBtn.addEventListener('click', resetFileUpload);
+                }
+            }, 50);
+        } else {
+            resetFileUpload();
+        }
+    });
+
+    // 텍스트 입력
+    textInput.addEventListener('input', () => {
+        if (fileUploaded) {
+            alert("⚠️ 파일이 이미 업로드되어 있습니다. 텍스트를 초기화합니다.");
+            resetTextInput(); // 나중에 텍스트 입력했으니 파일을 지운다
+        }
+
+        if (textInput.value.trim().length > 0) {
+            textEntered = true;
+        } else {
+            textEntered = false;
+        }
+
+        updateTextCount();
+        checkInputProvided();
+        handleStepProgression(); 
+    });
+
+    // 초기 상태 체크
     checkInputProvided();
 });
