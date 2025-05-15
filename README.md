@@ -163,4 +163,6 @@ news_summary_project/
 * [주식 뉴스 요약 메일링 프로그램](https://myeonghak.github.io/natural%20language%20processing/NLP-주식-뉴스-요약-메일링-프로그램/)
 * [NLP 활용 뉴스 요약 가이드](https://study-yoon.tistory.com/227)
 * [News Summary - est.ai 블로그](https://blog.est.ai/2021/06/news-summary/)
+* [파이썬 특정 키워드 네이버 뉴스 크롤링](https://wewegh.tistory.com/61)
+* [파이썬 카테고리별 네이버 기사 크롤링](https://bigdata-doctrine.tistory.com/34)
 
