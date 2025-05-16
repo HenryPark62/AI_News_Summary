@@ -8,13 +8,13 @@ class TogetherSummarizer(SummarizerStrategy):
         from .summarizer import create_prompt
         prompt = create_prompt(text, style)
 
-        url = "https://api.together.xyz/v1/chat/completions"  # ✅ 다시 이걸로!
+        url = "https://api.together.xyz/v1/chat/completions"  # Url
         headers = {
             "Authorization": f"Bearer {TOGETHER_API_KEY}",
             "Content-Type": "application/json"
         }
         data = {
-            "model": "mistralai/Mixtral-8x7B-Instruct-v0.1",  # ✅ Together 무료 제공 모델 사용 예시
+            "model": "mistralai/Mixtral-8x7B-Instruct-v0.1",  # Together 무료 제공 모델 사용 예시
             "messages": [
                 {"role": "system", "content": "당신은 뉴스 요약 전문가입니다."},
                 {"role": "user", "content": prompt}
