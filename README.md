@@ -86,17 +86,7 @@ flowchart TB
 
 ## 🏗️ 시스템 구조도 (Backend API 흐름)
 
-```mermaid
-flowchart TD
-    A1[Frontend HTML CSS JS] --> B2[Flask Server 요청 start summary]
-    B2 --> C3[Summarizer 처리]
-    C3 --> D4[LLM API 호출 OpenAI Together Local]
-    D4 --> E5[LLM 요약 결과 Summarizer로 반환]
-    E5 --> F6[Summarizer 결과 서버로 반환]
-    F6 --> G7[결과 페이지 렌더링 요약 결과와 압축률 그래프]
-    G7 --> H8[이메일 발송 요청]
-    H8 --> I9[Gmail SMTP 서버로 메일 발송]
-```
+![시스템 구조도 drawio](https://github.com/user-attachments/assets/8610335a-8a00-4665-bbd8-fafaa39de3cc)
 
 ---
 
