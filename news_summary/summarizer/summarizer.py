@@ -1,4 +1,4 @@
-from .openai_summarizer import OpenAISummarizer
+from .perplexity_summarizer import PerplexitySummarizer
 from .together_summarizer import TogetherSummarizer
 from .local_summarizer import LocalSummarizer
 
@@ -7,14 +7,14 @@ from .local_summarizer import LocalSummarizer
 # =====================
 
 def get_summarizer(model_name):
-    if model_name == "openai":
-        return OpenAISummarizer()
+    if model_name == "perplexity":
+        return PerplexitySummarizer()
     elif model_name == "together":
         return TogetherSummarizer()
     elif model_name == "local":
         return LocalSummarizer()
     else:
-        return OpenAISummarizer()  # 기본값
+        return PerplexitySummarizer()  # 기본값
 
 # =====================
 # 프롬프트 생성 함수
@@ -44,6 +44,6 @@ def create_prompt(text, style):
 # 메인 요약 함수
 # =====================
 
-def summarize_news(text, model_name="openai", style="brief"):
+def summarize_news(text, model_name="perplexity", style="brief"):
     summarizer = get_summarizer(model_name)
     return summarizer.summarize(text, style)
