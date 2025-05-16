@@ -17,7 +17,7 @@
         <div class="fade-step show" id="step-1">
             <h3>🧠 요약 모델 선택</h3>
             <label><input type="radio" name="model" value="perplexity"> Perplexity.ai</label>
-            <label><input type="radio" name="model" value="together"> Together.ai 무료 모델</label>
+            <label><input type="radio" name="model" value="together"> Together.ai</label>
             <label><input type="radio" name="model" value="local"> 로컬 LLM (ollama 등)</label>
         </div>
 
@@ -34,8 +34,14 @@
             <div class="input-choice">
                 <div class="upload-area">
                     <h4>📂 파일 업로드 (.txt)</h4>
-                    <input type="file" name="file" accept=".txt">
+                    <label for="file-upload" class="custom-file-upload">
+                        📂 파일 선택
+                    </label>
+                    <input id="file-upload" type="file" name="file" accept=".txt" style="display: none;">
                 </div>
+                </div>
+                <br>
+                <div class="or-text">또는</div>
 
                 <div class="textarea-area">
                     <h4>✍️ 텍스트 직접 입력</h4>

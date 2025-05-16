@@ -4,6 +4,14 @@ body {
     background-color: #f9f9f9;
     margin: 0;
     padding: 0;
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* 수직 방향 가운데 */
+    align-items: center;     /* 수평 방향 가운데 */
+    min-height: 100vh;       /* 브라우저 높이 기준 100% 채우기 */
+    margin: 0;
+    
 }
 
 .container {
@@ -26,6 +34,22 @@ h1, h2 {
 .start-area {
     text-align: center;
     margin: 30px 0;
+}
+
+.upload-area {
+    text-align: center; /* 전체 업로드 영역 텍스트 중앙정렬 */
+}
+
+.upload-area-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.upload-area input[type="file"] {
+    display: block;
+    margin: 10px auto; /* 중앙정렬: 위아래10px, 좌우auto */
+    text-align: center;
 }
 
 /* 단계별 영역 */
@@ -51,22 +75,28 @@ h1, h2 {
     font-size: 18px;
 }
 
-/* 입력 선택 (파일/텍스트 입력 영역) */
-.input-choice {
+.or-text {
     display: flex;
-    flex-direction: row; /* 가로 배치 */
-    justify-content: center; /* 중앙 정렬 */
-    gap: 30px;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    color: #040303;
+    margin: 0 10px;
+    white-space: nowrap;
 }
 
-.upload-area, .textarea-area {
-    width: 45%;
-    max-width: 300px;
-    min-width: 250px;
-    text-align: center;
+/* 입력 선택 (파일/텍스트 입력 영역) */
+
+.text-count {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center; /* 수평 중앙 정렬 */
+    align-items: center;
+    font-size: 14px;
+    color: #555;
 }
+
 
 /* 텍스트 입력창 */
 textarea {
@@ -237,21 +267,6 @@ h3 {
     margin-top: 0;
 }
 
-.input-choice {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-
-.upload-area, .textarea-area {
-    flex: 1;
-    min-width: 300px;
-    background-color: #f9f9f9;
-    border: 1px dashed #ccc;
-    border-radius: 8px;
-    padding: 15px;
-}
-
 .start-btn {
     text-align: center;
     margin-top: 30px;
@@ -278,12 +293,12 @@ h3 {
     100% { transform: translateY(0px); }
   }
   
-  #news-icon {
+#news-icon {
     display: inline-block;
     animation: float 2s ease-in-out infinite;
   }
 
-  #typing-text {
+#typing-text {
     min-height: 30px; /* 또는 적당한 높이 */
     display: block;
 }
@@ -322,4 +337,20 @@ h3 {
     to {
         opacity: 1;
     }
+}
+
+.custom-file-upload {
+    display: inline-block;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: bold;
+    background-color: #007bff;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.custom-file-upload:hover {
+    background-color: #0056b3;
 }

@@ -44,6 +44,6 @@ def create_prompt(text, style):
 # 메인 요약 함수
 # =====================
 
-def summarize_news(text, model_name="perplexity", style="brief"):
+def summarize_news(text, model_name="openai", style="brief"):
     summarizer = get_summarizer(model_name)
     return summarizer.summarize(text, style)
