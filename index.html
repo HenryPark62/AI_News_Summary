@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>News.ai</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <h1 class="main-title"><span id="news-icon" class="emoji-large">📰</span> <span class="title-text">News.ai</span></h1>
+    <h3 id="typing-text"><span id="typed-text"></span><span id="cursor">|</span></h3>
+
+    <form method="POST" enctype="multipart/form-data" action="/start-summary" id="summary-form">
+
+        <!-- 1단계: 요약 모델 선택 (처음부터 보임) -->
+        <div class="fade-step show" id="step-1">
+            <h3>🧠 요약 모델 선택</h3>
+            <label><input type="radio" name="model" value="perplexity"> Perplexity.ai</label>
+            <label><input type="radio" name="model" value="together"> Together.ai</label>
+            <label><input type="radio" name="model" value="local"> 로컬 LLM (ollama 등)</label>
+        </div>
+
+        <!-- 2단계: 요약 스타일 선택 (기본 숨김) -->
+        <div class="fade-step hidden" id="step-2">
+            <h3>📝 요약 스타일 선택</h3>
+            <label><input type="radio" name="style" value="brief"> 간결 요약 (2~3줄)</label>
+            <label><input type="radio" name="style" value="detailed"> 상세 요약 (5~7줄)</label>
+        </div>
+
+        <!-- 3단계: 뉴스 입력 선택 (기본 숨김) -->
+        <div class="fade-step hidden" id="step-3">
+            <h3>📰 뉴스 입력</h3>
+            <div class="input-choice">
+                <div class="upload-area">
+                    <h4>📂 파일 업로드 (.txt)</h4>
+                    <label for="file-upload" class="custom-file-upload">
+                        📂 파일 선택
+                    </label>
+                    <input id="file-upload" type="file" name="file" accept=".txt" style="display: none;">
+                </div>
+                </div>
+                <br>
+                <div class="or-text">또는</div>
+
+                <div class="textarea-area">
+                    <h4>✍️ 텍스트 직접 입력</h4>
+                    <textarea name="text_content" rows="6" placeholder="뉴스 본문을 입력하세요..."></textarea>
+                </div>
+                <!-- 파일 업로드 이름 표시용 -->
+                <div id="file-name" class="file-name"></div>
+
+                <!-- 텍스트 입력 글자수 표시용 -->
+                <div id="text-count" class="text-count">0자 입력됨</div>
+            </div>
+        </div>
+
+        <!-- 최종 요약 시작 버튼 -->
+        <div class="start-btn">
+            <button type="submit" id="start-button" disabled>🚀 요약 시작</button>
+        </div>
+
+    </form>
+
+<script src="{{ url_for('static', filename='js/validate.js') }}"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const textContainer = document.getElementById('typed-text');
+    const texts = [
+        "AI가 읽고, 당신은 이해만 하면 됩니다.",
+        "뉴스를 더 빠르게!",
+        "이해만 하면 끝!",
+        "당신의 시간은 소중합니다.",
+        "핵심만 골라주는 AI 요약",
+        "뉴스, 더 이상 길게 읽지 마세요",
+        "바쁜 당신을 위한 초간편 요약",
+        "읽는 데 1분, 이해는 10초",
+        "복잡한 뉴스, 쉽고 빠른 이해",
+        "중요한 정보만 한눈에",
+        "News.ai가 핵심을 뽑아드립니다!"
+
+    ];
+    let currentText = "";
+    let charIndex = 0;
+    let isDeleting = false;
+
+    function getRandomSpeed(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+    function pickRandomText() {
+        const randomIndex = Math.floor(Math.random() * texts.length);
+        return texts[randomIndex];
+    }
+
+    function typeEffect() {
+        if (!currentText) {
+            currentText = pickRandomText();
+        }
+
+        if (!isDeleting) {
+            // 새 글자 추가
+            const nextChar = currentText.charAt(charIndex);
+            const span = document.createElement('span');
+            span.textContent = nextChar;
+            span.classList.add('fade-in-char');
+            textContainer.appendChild(span);
+            charIndex++;
+
+            if (charIndex === currentText.length) {
+                isDeleting = true;
+                setTimeout(typeEffect, 1200); // 다 타이핑하면 잠깐 멈춤
+                return;
+            }
+        } else {
+            // 삭제는 마지막 글자 하나 제거
+            if (textContainer.lastChild) {
+                textContainer.removeChild(textContainer.lastChild);
+            }
+            charIndex--;
+
+            if (charIndex === 0) {
+                isDeleting = false;
+                currentText = pickRandomText();
+            }
+        }
+
+        const speed = isDeleting ? 40 : getRandomSpeed(80, 150);
+        setTimeout(typeEffect, speed);
+    }
+
+    typeEffect();
+});
+</script>
+</div>
+
+</body>
+</html>
