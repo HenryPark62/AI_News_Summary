@@ -86,7 +86,8 @@ flowchart TB
 
 ## 🏗️ 시스템 구조도 (Backend API 흐름)
 
-![시스템 구조도 drawio](https://github.com/user-attachments/assets/8610335a-8a00-4665-bbd8-fafaa39de3cc)
+![제목 없는 다이어그램 drawio](https://github.com/user-attachments/assets/5c86a987-b28a-4df5-9981-e4f9e2049263)
+
 
 ---
 
