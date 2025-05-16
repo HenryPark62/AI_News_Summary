@@ -5,6 +5,26 @@ from email.message import EmailMessage
 from datetime import datetime
 from summarizer import summarize_news  # 패키지화된 summarizer 사용
 
+# 뉴스 파서들
+from extractors.naver_parser_chosun import extract_clean_news_body as parse_chosun
+
+# 미구현 뉴스 파서
+#from news_parser.news1_parser import extract_clean_news_body as parse_news1
+#from news_parser.news2_parser import extract_clean_news_body as parse_news2
+
+
+# 뉴스 파서 매핑 함수
+def extract_news_by_source(url, source):
+    if source == "chosun":
+        return parse_chosun(url)
+    elif source == "news1":
+        return "❌ 뉴스1 파서 미구현"
+    elif source == "news2":
+        return "❌ 뉴스2 파서 미구현"
+    else:
+        return "❌ 지원하지 않는 언론사입니다."
+
+
 app = Flask(__name__)
 UPLOAD_FOLDER = './uploads'
 OUTPUT_FOLDER = './output'
@@ -21,19 +41,28 @@ def index():
 def start_summary():
     selected_model = request.form.get('model')
     selected_style = request.form.get('style')
-    
+
     uploaded_file = request.files.get('file')
     input_text = request.form.get('text_content')
+    input_url = request.form.get('news_url')
+    news_source = request.form.get('news_source')
 
+    news_text = ""
+
+    # 우선순위: 파일 > 텍스트 > URL
     if uploaded_file and uploaded_file.filename.endswith('.txt'):
         file_path = os.path.join(UPLOAD_FOLDER, uploaded_file.filename)
         uploaded_file.save(file_path)
         with open(file_path, 'r', encoding='utf-8') as f:
-            news_text = f.read()
+            news_text = f.read().strip()
     elif input_text and input_text.strip() != "":
         news_text = input_text.strip()
+    elif input_url and news_source:
+        news_text = extract_news_by_source(input_url.strip(), news_source.strip())
+        if news_text.startswith("❌"):
+            return f"본문 추출 실패: {news_text}", 400
     else:
-        return "파일 업로드나 텍스트 입력이 필요합니다.", 400
+        return "❌ 파일, 텍스트, URL 중 하나는 입력해야 합니다.", 400
 
     return start_summarization(news_text, selected_model, selected_style)
 

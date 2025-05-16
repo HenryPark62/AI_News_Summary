@@ -118,6 +118,12 @@ news_summary/
 │       ├── script.js                # 타이핑 효과, 결과 표시용 스크립트
 │       └── validate.js              # 입력 검증 및 진행 관리 스크립트
 │
+├── extractors/                      # 언론사별 요약 알고리즘 폴더 (URL 입력 전용)
+│   ├── naver_parser_chosun.py       # 조선일보 본문 파싱 파일
+│   ├── naver_parser_news1.py        # 뉴스1 본문 파싱 파일 (미구현)
+│   └── naver_parser_news2.py        # 뉴스2 본문 파싱 파일 (미구현)
+│   └──__pycache__/                  # 파이썬 캐시 폴더
+│
 ├── templates/                       # Flask 템플릿 폴더
 │   ├── index.html                   # 메인 입력 페이지
 │   ├── loading.html                 # 요약 로딩 중 페이지
@@ -129,8 +135,8 @@ news_summary/
 │   ├── summarizer.py                # Summarizer 팩토리 및 메인 함수
 │   ├── perplexity_summarizer.py     # Perplexity.ai 기반 요약 클래스
 │   ├── together_summarizer.py       # Together.ai 기반 요약 클래스
-│   └── local_summarizer.py          # 로컬 LLM 기반 요약 클래스
-└── __pycache__/                     # 파이썬 캐시 폴더
+│   ├── local_summarizer.py          # 로컬 LLM 기반 요약 클래스
+│   └──__pycache__/                  # 파이썬 캐시 폴더
 │
 ├── uploads/                         # 업로드된 뉴스 파일 저장 폴더
 ├── output/                          # 요약 결과 저장 폴더

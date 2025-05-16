@@ -1,4 +1,5 @@
 # summarizer/summarizer_strategy.py
+# 전략 패턴
 
 class SummarizerStrategy:
     def summarize(self, text, style):

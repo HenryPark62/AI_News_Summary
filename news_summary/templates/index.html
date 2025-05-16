@@ -8,7 +8,7 @@
 <body>
 
 <div class="container">
-    <h1><span id="news-icon">📰</span> News.ai</h1>
+    <h1 class="main-title"><span id="news-icon" class="emoji-large">📰</span> <span class="title-text">News.ai</span></h1>
     <h3 id="typing-text"><span id="typed-text"></span><span id="cursor">|</span></h3>
 
     <form method="POST" enctype="multipart/form-data" action="/start-summary" id="summary-form">
@@ -31,6 +31,7 @@
         <!-- 3단계: 뉴스 입력 선택 (기본 숨김) -->
         <div class="fade-step hidden" id="step-3">
             <h3>📰 뉴스 입력</h3>
+            
             <div class="input-choice">
                 <div class="upload-area">
                     <h4>📂 파일 업로드 (.txt)</h4>
@@ -39,17 +40,35 @@
                     </label>
                     <input id="file-upload" type="file" name="file" accept=".txt" style="display: none;">
                 </div>
-                </div>
+        
                 <br>
                 <div class="or-text">또는</div>
-
+        
                 <div class="textarea-area">
                     <h4>✍️ 텍스트 직접 입력</h4>
                     <textarea name="text_content" rows="6" placeholder="뉴스 본문을 입력하세요..."></textarea>
                 </div>
+        
+                <br>
+                <div class="or-text">또는</div>
+        
+                <div class="url-input-area">
+                    <h4>🔗 뉴스 URL 입력</h4>
+                    <input type="text" name="news_url" placeholder="https://n.news.naver.com/article/..." style="width:100%; padding: 10px; font-size: 14px;">
+
+                    <div style="margin-top: 10px; text-align: center;">
+                        <label><strong>언론사 선택:</strong></label>
+                        <div style="display: flex; justify-content: center; gap: 20px; margin-top: 5px;">
+                            <label><input type="radio" name="news_source" value="chosun" required> 조선일보</label>
+                            <label><input type="radio" name="news_source" value="news1"> 뉴스1</label>
+                            <label><input type="radio" name="news_source" value="news2"> 뉴스2</label>
+                        </div>
+                    </div>
+                </div>
+        
                 <!-- 파일 업로드 이름 표시용 -->
                 <div id="file-name" class="file-name"></div>
-
+        
                 <!-- 텍스트 입력 글자수 표시용 -->
                 <div id="text-count" class="text-count">0자 입력됨</div>
             </div>

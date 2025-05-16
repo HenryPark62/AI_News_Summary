@@ -11,6 +11,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const fileNameDisplay = document.getElementById('file-name');
     const textCountDisplay = document.getElementById('text-count');
 
+    // URL input 감지
+    const urlInput = document.querySelector('input[name="news_url"]');
+    const newsSourceRadios = document.querySelectorAll('input[name="news_source"]');
+
     let uploadedFileTextLength = 0;
     let fileUploaded = false; // 파일 업로드 여부
     let textEntered = false; // 텍스트 입력 여부
@@ -39,12 +43,19 @@ document.addEventListener('DOMContentLoaded', function () {
     function checkInputProvided() {
         const fileProvided = fileInput.files.length > 0;
         const textProvided = textInput.value.trim().length > 0;
-
-        if (fileProvided || textProvided) {
+        const urlProvided = urlInput.value.trim().length > 0;
+        const sourceSelected = Array.from(newsSourceRadios).some(radio => radio.checked);
+    
+        // 하나라도 입력되었으면 버튼 활성화
+        if (
+            (fileProvided || textProvided) || 
+            (urlProvided && sourceSelected)
+        ) {
             startButton.disabled = false;
         } else {
             startButton.disabled = true;
         }
+    
         updateTextCount();
     }
 
@@ -128,6 +139,20 @@ document.addEventListener('DOMContentLoaded', function () {
         updateTextCount();
         checkInputProvided();
         handleStepProgression(); 
+    });
+
+    // 뉴스 URL 입력
+    urlInput.addEventListener('input', () => {
+        checkInputProvided();
+        handleStepProgression();
+    });
+
+    // 언론사 라디오 선택
+    newsSourceRadios.forEach(radio => {
+        radio.addEventListener('change', () => {
+            checkInputProvided();
+            handleStepProgression();
+        });
     });
 
     // 초기 상태 체크

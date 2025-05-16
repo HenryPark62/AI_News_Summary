@@ -30,6 +30,31 @@ h1, h2 {
     margin-bottom: 20px;
 }
 
+
+/* 메인 타이틀 (News.ai, 이모지) 파트 */
+
+.main-title {
+    font-size: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.emoji-large {
+    font-size: 70px;
+    animation: float 1.9s ease-in-out infinite;
+}
+
+.title-text {
+    font-size: 110px;
+    font-weight: bold;
+    color: #222;
+}
+
+
 /* 시작하기 버튼 영역 */
 .start-area {
     text-align: center;
