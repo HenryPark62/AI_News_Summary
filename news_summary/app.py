@@ -6,8 +6,8 @@ from datetime import datetime
 from summarizer import summarize_news  # 패키지화된 summarizer 사용
 
 # 뉴스 파서들
-from extractors.naver_parser_chosun import extract_clean_news_body as parse_chosun
-from extractors.naver_parser_newdaily import extract_clean_news_body as parse_newdaily
+from extractors.news_parser_naver import extract_clean_news_body as parse_naver
+from extractors.news_parser_newdaily import extract_clean_news_body as parse_newdaily
 
 # 미구현 뉴스 파서
 #from news_parser.news2_parser import extract_clean_news_body as parse_news2
@@ -15,8 +15,8 @@ from extractors.naver_parser_newdaily import extract_clean_news_body as parse_ne
 
 # 뉴스 파서 매핑 함수
 def extract_news_by_source(url, source):
-    if source == "chosun":
-        return parse_chosun(url)
+    if source == "naver":
+        return parse_naver(url)
     elif source == "newdaily":
         return parse_newdaily(url)
     elif source == "news2":
