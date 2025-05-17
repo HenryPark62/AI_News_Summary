@@ -1,3 +1,4 @@
+# extractors/naver_parser_newdaily.py
 import requests
 from bs4 import BeautifulSoup
 
