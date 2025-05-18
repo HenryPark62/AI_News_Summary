@@ -1,30 +1,26 @@
 # extractors/news_parser_naver.py
+
+# Naver 뉴스 기사 전용 파서 (BaseNewsExtractor 상속)
 # 네이버 제휴 언론사 (구독 가능한)는 html이 모두 공통된 구조라 하나의 extractors로 추출 가능합니다.
 
 import requests
 from bs4 import BeautifulSoup
-import re
+from .base_extractor import BaseNewsExtractor
 
-def extract_clean_news_body(url: str) -> str:
-    headers = {"User-Agent": "Mozilla/5.0"}
-    try:
+class NaverNewsExtractor(BaseNewsExtractor):
+    def fetch(self, url: str) -> str:
+        headers = {"User-Agent": "Mozilla/5.0"}
         res = requests.get(url, headers=headers, timeout=10)
         res.raise_for_status()
-    except requests.RequestException as e:
-        return f"❌ 요청 실패: {e}"
+        return res.text
 
-    soup = BeautifulSoup(res.text, "html.parser")
-    article = soup.find("article", id="dic_area")
-    if not article:
-        return "❌ 본문 태그가 없습니다."
+    def parse(self, html: str) -> str:
+        soup = BeautifulSoup(html, "html.parser")
 
-# HTML 소스코드에서 불필요한 태그 제거
-    for tag in article.find_all(["b", "em", "span", "figure", "div", "img"]): 
-        tag.decompose()
-
-    raw_text = article.get_text(separator="\n", strip=True)
-    clean_text = re.sub(r'\s*/[^\n]+', '', raw_text)
-    lines = clean_text.strip().split("\n")
-    if len(lines) > 3:
-        lines = lines[3:]
-    return "\n".join(lines).strip()
+        # 네이버 뉴스 본문 div id는 'dic_area' 또는 'newsct_article'
+        body = soup.find("div", id="dic_area")
+        if body is None:
+            body = soup.find("div", id="newsct_article")
+        if body:
+            return body.get_text()
+        return "본문 영역을 찾을 수 없습니다."

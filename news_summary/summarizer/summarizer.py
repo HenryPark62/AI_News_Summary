@@ -1,49 +1,45 @@
-from .perplexity_summarizer import PerplexitySummarizer
-from .together_summarizer import TogetherSummarizer
-from .local_summarizer import LocalSummarizer
+# summarizer/summarizer.py
+
+# 전략 실행 컨텍스트 + 프롬프트 생성 + 외부 진입점 함수
+
+"""
+
+사용자 요청
+   ↓
+summarize_news() → 팩토리에서 전략 프록시 생성
+   ↓
+create_prompt()로 프롬프트 생성
+   ↓
+strategy.summarize(prompt, style)
+   ↓
+프록시 → 실제 API 호출
+
+"""
+
+# 전략 실행 컨텍스트 + 외부 진입점 함수
+
+from .summarizer_factory import get_summarizer_factory
+from .prompt_utils import create_prompt  # 🔁 순환 참조 방지를 위해 별도 모듈로 분리
 
 # =====================
-# Summarizer 전략 선택
+# 전략 실행 컨텍스트
 # =====================
+class Summarizer:
+    def __init__(self, strategy):
+        self.strategy = strategy
 
-def get_summarizer(model_name):
-    if model_name == "perplexity":
-        return PerplexitySummarizer()
-    elif model_name == "together":
-        return TogetherSummarizer()
-    elif model_name == "local":
-        return LocalSummarizer()
-    else:
-        return PerplexitySummarizer()  # 기본값
+    def set_strategy(self, strategy):
+        self.strategy = strategy
 
-# =====================
-# 프롬프트 생성 함수
-# =====================
-
-def create_prompt(text, style):
-    if style == "brief":
-        return (
-            "다음은 뉴스 기사 전문입니다.\n\n"
-            f"{text}\n\n"
-            "이 뉴스를 한국어로 간결하고 핵심만 요약해 주세요. (2~3줄 이내) 그리고 출처 번호나 [1], [2] 등의 표시는 포함하지 말고 작성해 주세요."
-        )
-    elif style == "detailed":
-        return (
-            "다음은 뉴스 기사 전문입니다.\n\n"
-            f"{text}\n\n"
-            "이 뉴스를 한국어로 상세하고 풍부하게 요약해 주세요. (5~7줄 정도) 그리고 출처 번호나 [1], [2] 등의 표시는 포함하지 말고 작성해 주세요."
-        )
-    else:
-        return (
-            "다음은 뉴스 기사 전문입니다.\n\n"
-            f"{text}\n\n"
-            "이 뉴스를 한국어로 간결하고 명확하게 3~5줄 이내로 요약해 주세요. 그리고 출처 번호나 [1], [2] 등의 표시는 포함하지 말고 작성해 주세요."
-        )
+    def summarize(self, text):
+        return self.strategy.summarize(text)
 
 # =====================
-# 메인 요약 함수
+# 외부 진입점 함수
 # =====================
+def summarize_news(text, model_name="perplexity", style="brief"):
+    factory = get_summarizer_factory(model_name)
+    strategy = factory.create_summarizer()
+    prompt = create_prompt(text, style)
+    return strategy.summarize(prompt, style)
 
-def summarize_news(text, model_name="openai", style="brief"):
-    summarizer = get_summarizer(model_name)
-    return summarizer.summarize(text, style)

@@ -1,14 +1,15 @@
 # summarizer/summarizer_strategy.py
-# 전략 패턴
 
-class SummarizerStrategy:
-    def summarize(self, text, style):
+# 전략 패턴의 핵심 인터페이스
+from abc import ABC, abstractmethod
+
+class SummarizerStrategy(ABC):
+    @abstractmethod
+    def summarize(self, text: str, style: str) -> str:
         """
-        SummarizerStrategy 기본 인터페이스
-        모든 요약 클래스는 이 메서드를 오버라이드 해야 합니다.
-        
-        :param text: 요약할 뉴스 본문 텍스트
-        :param style: 요약 스타일 ("brief" 또는 "detailed")
-        :return: 요약 결과 텍스트
+        주어진 텍스트를 특정 스타일에 따라 요약하는 전략 메서드
+        :param text: 원문 텍스트
+        :param style: 'brief', 'detailed' 등 요약 스타일
+        :return: 요약된 문자열 결과
         """
-        raise NotImplementedError("summarize() 메서드는 반드시 하위 클래스에서 구현해야 합니다.")
+        pass

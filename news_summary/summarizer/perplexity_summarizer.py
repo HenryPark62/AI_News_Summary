@@ -1,21 +1,28 @@
-import os
+# summarizer/perplexity_summarizer.py
+
+# RealSubject: 실제 Perplexity API 요청 처리 전략
+
 import requests
 from .summarizer_strategy import SummarizerStrategy
-
-api_key = "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"
+from .prompt_utils import create_prompt
 
 class PerplexitySummarizer(SummarizerStrategy):
+    def __init__(self, api_key: str):
+        self.api_key = api_key
+        self.url = "https://api.perplexity.ai/chat/completions"
+
     def summarize(self, text, style):
-        from .summarizer import create_prompt
+        if style not in ("brief", "detailed"):
+            return f"[Perplexity 오류] 지원하지 않는 스타일: {style}"
+
         prompt = create_prompt(text, style)
 
-        url = "https://api.perplexity.ai/chat/completions"
         headers = {
-            "Authorization": f"Bearer {api_key}",
+            "Authorization": f"Bearer {self.api_key}",
             "Content-Type": "application/json"
         }
         data = {
-            "model": "sonar-pro",  # 또는 pplx-7b-online 등 지원 모델명
+            "model": "sonar-pro",
             "messages": [
                 {"role": "system", "content": "당신은 뉴스 요약 전문가입니다."},
                 {"role": "user", "content": prompt}
@@ -23,13 +30,10 @@ class PerplexitySummarizer(SummarizerStrategy):
             "temperature": 0.3,
             "max_tokens": 800 if style == "detailed" else 500
         }
-        response = requests.post(url, headers=headers, json=data, timeout=30)
-        if response.status_code != 200:
-            return f"[Perplexity API 오류] status {response.status_code}: {response.text}"
-        result = response.json()
-        if 'choices' in result and result['choices']:
-            return result['choices'][0]['message']['content'].strip()
-        elif 'error' in result:
-            return f"[Perplexity API 오류] {result['error']}"
-        else:
-            return f"[Perplexity API 알 수 없는 오류] 응답: {result}"
+
+        try:
+            response = requests.post(self.url, headers=headers, json=data, timeout=30)
+            response.raise_for_status()
+            return response.json()["choices"][0]["message"]["content"].strip()
+        except Exception as e:
+            return f"[Perplexity API 오류] {str(e)}"

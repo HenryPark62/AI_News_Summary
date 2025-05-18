@@ -1,36 +1,39 @@
+# summarizer/together_summarizer.py
+# ✅ RealSubject: Together API 요청 처리 전략 
+
 import requests
 from .summarizer_strategy import SummarizerStrategy
-
-TOGETHER_API_KEY = "b108677089b439b4be4e5813d688b34108923858b98dd2c6cb6b54ce8f009c5a"
+from .prompt_utils import create_prompt
 
 class TogetherSummarizer(SummarizerStrategy):
+    def __init__(self, api_key: str):
+        self.api_key = api_key
+        self.url = "https://api.together.xyz/v1/chat/completions"
+
     def summarize(self, text, style):
-        from .summarizer import create_prompt
+        if style not in ("brief", "detailed"):
+            return f"[Together 오류] 지원하지 않는 스타일: {style}"
+
         prompt = create_prompt(text, style)
 
-        url = "https://api.together.xyz/v1/chat/completions"  # Url
         headers = {
-            "Authorization": f"Bearer {TOGETHER_API_KEY}",
+            "Authorization": f"Bearer {self.api_key}",
             "Content-Type": "application/json"
         }
         data = {
-            "model": "mistralai/Mixtral-8x7B-Instruct-v0.1",  # Together 무료 제공 모델 사용 예시
+            "model": "mistralai/Mixtral-8x7B-Instruct-v0.1",
             "messages": [
                 {"role": "system", "content": "당신은 뉴스 요약 전문가입니다."},
                 {"role": "user", "content": prompt}
             ],
+            "max_tokens": 800 if style == "detailed" else 500,
             "temperature": 0.3,
-            "max_tokens": 800 if style == "detailed" else 500
+            "top_p": 0.95
         }
 
-        response = requests.post(url, headers=headers, json=data)
-        response.raise_for_status()
-
-        result = response.json()
-        return result['choices'][0]['message']['content'].strip()
-    
-
-
-
-
-    
+        try:
+            response = requests.post(self.url, headers=headers, json=data, timeout=30)
+            response.raise_for_status()
+            return response.json()["choices"][0]["message"]["content"].strip()
+        except Exception as e:
+            return f"[Together API 오류] {str(e)}"
