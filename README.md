@@ -1,4 +1,4 @@
-# 📰News.ai: LLM을 활용한 뉴스 요약 및 메일 발송 서비스 <br>
+# 📰News.ai: LLM을 활용한 뉴스 요약 및 메일 발송 서비스 (News Summarization and Email Delivery Service using LLM) <br>
 
 ## ✨ 프로젝트 소개
 
