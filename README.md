@@ -1,4 +1,4 @@
-# 📰News.ai: LLM을 활용한 뉴스 요약 및 메일 발송 서비스 (News Summarization and Email Delivery Service using LLM) <br>
+# 📰News.ai: LLM을 활용한 뉴스 요약 및 메일 발송 서비스 <br>
 
 ## ✨ 프로젝트 소개
 
@@ -13,12 +13,12 @@
 
 | 디자인 패턴                             | 적용 위치                           | 기대 효과                                                     |
 | :--------------------------------- | :------------------------------ | :-------------------------------------------------------- |
-| **추상 팩토리 패턴** (Abstract Factory)   | 뉴스 요약 생성기 (Perplexity.ai 요약, Together.ai 요약) | 다양한 요약 알고리즘을 선택적으로 적용 가능<br>요약 방식 변경 시 코드 수정 최소화          |
+| **추상 팩토리 패턴** (Abstract Factory)   | 뉴스 요약 생성기 (Perplexity.ai, Together.ai) | 다양한 요약 알고리즘을 선택적으로 적용 가능<br>요약 방식 변경 시 코드 수정 최소화          |
 | **옵저버 패턴** (Observer)              | 메일 전송 성공/실패 알림 처리               | 메일 전송 결과를 이벤트 기반으로 사용자에게 전달<br>발송 로직과 알림 로직을 분리           |
 | **MVC 패턴** (Model-View-Controller) | 웹 구조화 (HTML, CSS)             | Model, View, Controller 분리<br>유지보수성과 확장성 향상  |
-| **전략 패턴** (Strategy)               | 뉴스 요약 방식 선택 처리                  | 실행 시점에 다양한 요약 모델(Perplexity.ai, Together.ai 등)을 선택 가능<br>요약 모델 교체 용이 |
-| **프록시 패턴** (Proxy)                 | 외부 API(OpenAI API) 호출 최적화       | API 호출 전에 요청 제한, 캐싱 등 부가기능 추가<br>API 부하 감소                |
-| **템플릿 메서드 패턴** (Template Method)   | 뉴스 크롤링 프로세스 기본 구조 설계            | 기본 크롤링 로직은 고정하고, 사이트별 차이만 하위 클래스에서 구현<br>다양한 언론사 대응 가능    |
+| **전략 패턴** (Strategy)               | 뉴스 요약 모델 선택 처리                  | 실행 시점에 다양한 요약 모델(Perplexity.ai, Together.ai 등)을 선택 가능<br>요약 모델 교체 용이 |
+| **프록시 패턴** (Proxy)                 | 외부 API(Perplexity API 등) 호출 최적화       | API 호출 전에 요청 제한, 캐싱 등 부가기능 추가<br>API 부하 감소                |
+| **템플릿 메서드 패턴** (Template Method)   | 뉴스 크롤링 프로세스 기본 구조 설계            | 기본 크롤링 로직은 고정하고, 사이트별 차이만 하위 클래스에서 구현, 다양한 언론사 대응 가능    |
 
 ---
 
@@ -28,7 +28,7 @@
 ```plaintext
 1. 뉴스 입력 (직접 입력 or 크롤링)
     ↓
-2. 뉴스 요약 (OpenAI API, LLM 모델 등을 활용, 요약 팩토리를 통해 다양한 요약 지원)
+2. 뉴스 요약, 압축률 그래프 제공 (Perplexity등 LLM 모델 활용, 요약 팩토리를 통해 다양한 요약 지원)
     ↓
 3. 메일 주소 입력
     ↓
@@ -43,11 +43,11 @@
 
 ## 👥 팀 역할 분담
 
-| 역할        | 담당 업무                           | 비고                 |
-| :-------- | :------------------------------ | :----------------- |
-| 박우진 (PM)   | 프로젝트 관리, 전체 구조 설계, LLM API 연결 및 프롬프트 리팩토링, 웹 페이지 개발 | AI 모듈 구현 및 연결 담당, 발표자료 준비 |
-| 이선기 | LLM API 연결, 뉴스 입력/크롤링 기능 개발 | 추상 팩토리 패턴 구현 담당, 발표자료 준비    |
-| 엄이슬 | 메일 발송 기능 개발 + 전송 성공 알림 (옵저버 패턴) | Django 메일 모듈 활용 예정, 발표자료 준비 |
+| 역할        | 담당 업무                           | 
+| :-------- | :------------------------------ |
+| 박우진 (PM)   | 프로젝트 관리, 전체 구조 설계, LLM API 연결 및 코드 리팩토링, 웹 개발, 크롤링 알고리즘 개발, 발표자료 준비  |
+| 이선기 | LLM API 연결, 알고리즘 응용 | 추상 팩토리 패턴 구현 담당   |
+| 엄이슬 | 메일 발송 기능 개발 + 전송 성공 알림 (옵저버 패턴) | 
 
 ---
 
@@ -55,7 +55,7 @@
 
 ### 기본 기능
 
-* 뉴스 가져오기 (직접 입력 or 크롤링)
+* 뉴스 가져오기 (직접 입력 or 크롤링 (URL 입력))
 * 입력된 뉴스 본문을 LLM이 요약하여 결과 및 압축률 그래프 생성
 * 입력한 메일 주소로 요약 결과 발송
 * 전송 성공 여부를 검사하고 사용자에게 알림 표시
@@ -77,19 +77,18 @@
 
 ![제목 없는 다이어그램 drawio](https://github.com/user-attachments/assets/5c86a987-b28a-4df5-9981-e4f9e2049263)
 
-
 ---
 
 ## 📂 프로젝트 디렉토리 구조
 
 ```plaintext
 news_summary/
-├── 5월15일 아이디어.md              # 회의 아이디어 정리
+├── 아이디어 및 개발일지.md              # 회의 아이디어 정리
 ├── 기능 명세서.md                   # 기능 정리 문서
 ├── 중간보고서.md                    # 프로젝트 중간 보고서
 ├── README.md                        # 프로젝트 설명 파일
 ├── app.py                           # Flask 서버 메인 파일
-├── test.txt                         # 테스트용 입력 파일
+├── test_news.txt                         # 테스트용 입력 파일
 │
 ├── static/                          # 정적 파일 (CSS, JS)
 │   ├── css/
@@ -99,9 +98,9 @@ news_summary/
 │       └── validate.js              # 입력 검증 및 진행 관리 스크립트
 │
 ├── extractors/                      # 언론사별 요약 알고리즘 폴더 (URL 입력 전용)
-│   ├── naver_parser_chosun.py       # 조선일보 본문 파싱 파일
-│   ├── naver_parser_news1.py        # 뉴스1 본문 파싱 파일 (미구현)
-│   └── naver_parser_news2.py        # 뉴스2 본문 파싱 파일 (미구현)
+│   ├── base_extractor.py       # base 추출기 (템플릿 메소드)
+│   ├── news_parser_naver.py       # 네이버 뉴스 본문 파싱 파일
+│   ├── news_parser_newdaily1.py        # 뉴데일리 본문 파싱 파일 
 │   └──__pycache__/                  # 파이썬 캐시 폴더
 │
 ├── templates/                       # Flask 템플릿 폴더
@@ -111,16 +110,21 @@ news_summary/
 │
 ├── summarizer/                      # 요약 관련 로직 모듈
 │   ├── __init__.py
-│   ├── summarizer_strategy.py       # Summarizer 추상 클래스 (전략 패턴)
-│   ├── summarizer.py                # Summarizer 팩토리 및 메인 함수
-│   ├── perplexity_summarizer.py     # Perplexity.ai 기반 요약 클래스
-│   ├── together_summarizer.py       # Together.ai 기반 요약 클래스
 │   ├── local_summarizer.py          # 로컬 LLM 기반 요약 클래스
+│   ├── perplexity_proxy.py     # Perplexity.ai proxy
+│   ├── perplexity_summarizer.py     # Perplexity.ai 기반 요약 클래스
+│   ├── together_proxy.py       # Together.ai proxy
+│   ├── together_summarizer.py       # Together.ai 기반 요약 클래스
+│   ├── prompt_utils.py     		# Prompt utils
+│   ├── summarizer.py                # Summarizer  메인 함수
+│   ├── summarizer_factory.py                # Summarizer 팩토리
+│   ├── summarizer_strategy.py       # Summarizer 추상 클래스 (전략 패턴)
 │   └──__pycache__/                  # 파이썬 캐시 폴더
 │
 ├── uploads/                         # 업로드된 뉴스 파일 저장 폴더
 ├── output/                          # 요약 결과 저장 폴더
-└── __pycache__/                     # 파이썬 캐시 폴더
+├── __pycache__/                     # 파이썬 캐시 폴더
+├── 자료/                      # 시스템 자료 (플로우 차트 등)
 ```
 
 ---
@@ -146,4 +150,3 @@ news_summary/
 * [News Summary - est.ai 블로그](https://blog.est.ai/2021/06/news-summary/)
 * [파이썬 특정 키워드 네이버 뉴스 크롤링](https://wewegh.tistory.com/61)
 * [파이썬 카테고리별 네이버 기사 크롤링](https://bigdata-doctrine.tistory.com/34)
-
