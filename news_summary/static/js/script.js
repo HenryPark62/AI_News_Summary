@@ -68,31 +68,33 @@ function finishAnalysis(data) {
     }, 500);
 }
 
+// 이메일 전송
 function sendEmail() {
-    const emailInput = document.getElementById('email-input').value;
+    const emailInput = document.getElementById('email-input');
+    const emailForm = document.getElementById('email-form');
+    const emailValue = emailInput.value;
 
-    if (!emailInput || !emailInput.includes('@')) {
+    if (!emailValue || !emailValue.includes('@')) {
         alert("올바른 이메일 주소를 입력해주세요.");
         return;
     }
 
+    const formData = new FormData(emailForm); 
+    console.log('Sending email form:', Object.fromEntries(formData));
+
     fetch('/send-email', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email: emailInput })
+        body: formData
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert('메일이 성공적으로 전송되었습니다!');
-        } else {
-            alert('메일 전송에 실패했습니다. 다시 시도해주세요.');
+    .then(response => {
+        if (!response.ok) {
+            return response.text().then(text => { throw new Error(text); });
         }
+        alert('메일이 성공적으로 전송되었습니다!');
+        window.location.href = '/result?message=' + encodeURIComponent('이메일 발송 성공');
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('메일 전송 중 오류가 발생했습니다.');
+        alert('메일 전송 중 오류가 발생했습니다: ' + error.message);
     });
 }
