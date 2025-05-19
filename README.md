@@ -16,7 +16,7 @@
 | **추상 팩토리 패턴** (Abstract Factory)   | 뉴스 요약 생성기 (Perplexity.ai, Together.ai) | 다양한 요약 알고리즘을 선택적으로 적용 가능<br>요약 방식 변경 시 코드 수정 최소화          |
 | **옵저버 패턴** (Observer)              | 메일 전송 성공/실패 알림 처리               | 메일 전송 결과를 이벤트 기반으로 사용자에게 전달<br>발송 로직과 알림 로직을 분리           |
 | **MVC 패턴** (Model-View-Controller) | 웹 구조화 (HTML, CSS)             | Model, View, Controller 분리<br>유지보수성과 확장성 향상  |
-| **전략 패턴** (Strategy)               | 뉴스 요약 모델 선택 처리                  | 실행 시점에 다양한 요약 모델(Perplexity.ai, Together.ai 등)을 선택 가능<br>요약 모델 교체 용이 |
+| **전략 패턴** (Strategy)               | 뉴스 요약 모델 선택 처리                  | 실행 시점에 다양한 요약 모델(Perplexity.ai, Together.ai 등)을 선택 가능, 요약 모델 교체 용이 |
 | **프록시 패턴** (Proxy)                 | 외부 API(Perplexity API 등) 호출 최적화       | API 호출 전에 요청 제한, 캐싱 등 부가기능 추가<br>API 부하 감소                |
 | **템플릿 메서드 패턴** (Template Method)   | 뉴스 크롤링 프로세스 기본 구조 설계            | 기본 크롤링 로직은 고정하고, 사이트별 차이만 하위 클래스에서 구현, 다양한 언론사 대응 가능    |
 
@@ -83,48 +83,48 @@
 
 ```plaintext
 news_summary/
-├── 아이디어 및 개발일지.md              # 회의 아이디어 정리
+├── 아이디어 및 개발일지.md      # 회의 아이디어 정리
 ├── 기능 명세서.md                   # 기능 정리 문서
 ├── 중간보고서.md                    # 프로젝트 중간 보고서
-├── README.md                        # 프로젝트 설명 파일
-├── app.py                           # Flask 서버 메인 파일
-├── test_news.txt                         # 테스트용 입력 파일
+├── README.md                    # 프로젝트 설명 파일
+├── app.py                               # Flask 서버 메인 파일
+├── test_news.txt                     # 테스트용 입력 파일
 │
 ├── static/                          # 정적 파일 (CSS, JS)
 │   ├── css/
 │   │   └── style.css                # 메인 스타일시트
 │   └── js/
-│       ├── script.js                # 타이핑 효과, 결과 표시용 스크립트
-│       └── validate.js              # 입력 검증 및 진행 관리 스크립트
+│       ├── script.js                    # 타이핑 효과, 결과 표시용 스크립트
+│       └── validate.js                # 입력 검증 및 진행 관리 스크립트
 │
-├── extractors/                      # 언론사별 요약 알고리즘 폴더 (URL 입력 전용)
-│   ├── base_extractor.py       # base 추출기 (템플릿 메소드)
+├── extractors/                                 # 언론사별 요약 알고리즘 폴더 (URL 입력 전용)
+│   ├── base_extractor.py               # base 추출기 (템플릿 메소드)
 │   ├── news_parser_naver.py       # 네이버 뉴스 본문 파싱 파일
 │   ├── news_parser_newdaily1.py        # 뉴데일리 본문 파싱 파일 
-│   └──__pycache__/                  # 파이썬 캐시 폴더
+│   └──__pycache__/                              # 파이썬 캐시 폴더
 │
-├── templates/                       # Flask 템플릿 폴더
+├── templates/                         # Flask 템플릿 폴더
 │   ├── index.html                   # 메인 입력 페이지
-│   ├── loading.html                 # 요약 로딩 중 페이지
+│   ├── loading.html                # 요약 로딩 중 페이지
 │   └── result.html                  # 요약 결과 출력 페이지
 │
 ├── summarizer/                      # 요약 관련 로직 모듈
 │   ├── __init__.py
 │   ├── local_summarizer.py          # 로컬 LLM 기반 요약 클래스
-│   ├── perplexity_proxy.py     # Perplexity.ai proxy
+│   ├── perplexity_proxy.py               # Perplexity.ai proxy
 │   ├── perplexity_summarizer.py     # Perplexity.ai 기반 요약 클래스
-│   ├── together_proxy.py       # Together.ai proxy
+│   ├── together_proxy.py                 # Together.ai proxy
 │   ├── together_summarizer.py       # Together.ai 기반 요약 클래스
-│   ├── prompt_utils.py     		# Prompt utils
-│   ├── summarizer.py                # Summarizer  메인 함수
-│   ├── summarizer_factory.py                # Summarizer 팩토리
-│   ├── summarizer_strategy.py       # Summarizer 추상 클래스 (전략 패턴)
-│   └──__pycache__/                  # 파이썬 캐시 폴더
+│   ├── prompt_utils.py     		     # Prompt utils
+│   ├── summarizer.py                       # Summarizer  메인 함수
+│   ├── summarizer_factory.py           # Summarizer 팩토리
+│   ├── summarizer_strategy.py        # Summarizer 추상 클래스 (전략 패턴)
+│   └──__pycache__/                        # 파이썬 캐시 폴더
 │
 ├── uploads/                         # 업로드된 뉴스 파일 저장 폴더
 ├── output/                          # 요약 결과 저장 폴더
 ├── __pycache__/                     # 파이썬 캐시 폴더
-├── 자료/                      # 시스템 자료 (플로우 차트 등)
+├── 자료/                              # 시스템 자료 (플로우 차트 등)
 ```
 
 ---
