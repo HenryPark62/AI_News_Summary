@@ -2,12 +2,14 @@
 from flask import Flask, request, render_template, send_file, redirect, url_for, jsonify
 import os
 import smtplib
-from email.message import EmailMessage
+
 from datetime import datetime
 from summarizer.summarizer import summarize_news  # 전략 기반 요약기 사용
 from extractors.news_parser_naver import NaverNewsExtractor
 from extractors.news_parser_newdaily import NewDailyNewsExtractor
 from dotenv import load_dotenv
+from mail.message import SummarizerSubject, EmailObserver # 메일보내기
+
 load_dotenv()
 
 app = Flask(__name__)
@@ -110,33 +112,31 @@ def download_summary():
 
 @app.route('/send-email', methods=['POST'])
 def send_email_route():
-    data = request.get_json()
-    receiver_email = data.get('email')
+    print(f"Request form: {request.form}")
+    receiver_email = request.form.get('email')
+    if not receiver_email:
+        print("이메일 주소 누락")
+        return render_template('result.html', error="이메일 주소가 필요합니다."), 400
 
     try:
-        sender_email = os.getenv("SENDER_EMAIL")
-        sender_password = os.getenv("SENDER_PASSWORD")
+        if "summary_file" not in progress:
+            print("요약 파일 없음")
+            return render_template('result.html', error="요약 결과가 없습니다."), 404
+        output_path = progress["summary_file"]
+        summary = progress["summary"]
 
-        msg = EmailMessage()
-        msg['Subject'] = '[뉴스 요약 서비스] 요약본을 보내드립니다.'
-        msg['From'] = sender_email
-        msg['To'] = receiver_email
-        msg.set_content(f"""안녕하세요, 요청하신 뉴스 요약본을 보내드립니다.\n\n요약 내용:\n{progress.get('summary', '')}""")
+        # 옵저버 패턴으로 이메일 발송
+        summarizer_subject = SummarizerSubject()  # 새 인스턴스 생성
+        email_observer = EmailObserver(receiver_email)
+        summarizer_subject.attach(email_observer)
+        summarizer_subject.notify(summary, output_path)
+        summarizer_subject.detach(email_observer)
 
-        if "summary_file" in progress:
-            with open(progress["summary_file"], 'rb') as f:
-                file_data = f.read()
-                file_name = os.path.basename(progress["summary_file"])
-                msg.add_attachment(file_data, maintype='application', subtype='octet-stream', filename=file_name)
+        return redirect(url_for('result', message="이메일 발송 성공"))
 
-        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
-            smtp.login(sender_email, sender_password)
-            smtp.send_message(msg)
-
-        return jsonify({"success": True})
     except Exception as e:
-        print(e)
-        return jsonify({"success": False})
+        print(f"[send_email_route] 오류: {str(e)}")
+        return render_template('result.html', error=f"이메일 발송 실패: {str(e)}"), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
