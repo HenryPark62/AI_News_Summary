@@ -5,9 +5,10 @@ import smtplib
 from email.message import EmailMessage
 from datetime import datetime
 from summarizer.summarizer import summarize_news  # 전략 기반 요약기 사용
-from extractors.news_parser_naver import NaverNewsExtractor
-from extractors.news_parser_newdaily import NewDailyNewsExtractor
+from extractors.naver_parser_naver import NaverNewsExtractor
+from extractors.naver_parser_newdaily import NewDailyNewsExtractor
 from dotenv import load_dotenv
+from news_headlines import get_latest_headlines
 load_dotenv()
 
 app = Flask(__name__)
@@ -137,6 +138,11 @@ def send_email_route():
     except Exception as e:
         print(e)
         return jsonify({"success": False})
+
+@app.route('/api/latest-headlines')
+def latest_headlines():
+    headlines = get_latest_headlines()
+    return jsonify({"headlines": headlines})
 
 if __name__ == '__main__':
     app.run(debug=True)
