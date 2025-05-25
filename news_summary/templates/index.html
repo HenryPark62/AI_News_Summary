@@ -8,8 +8,12 @@
 <body>
 
 <div class="container">
-    <h1 class="main-title"><span id="news-icon" class="emoji-large">📰</span> <span class="title-text">News.ai</span></h1>
-    <h3 id="typing-text"><span id="typed-text"></span><span id="cursor">|</span></h3>
+    <h1 class="main-title">
+        <span id="news-icon" class="emoji-large">📰</span>
+        <span class="title-text">News.ai</span>
+    </h1>
+
+    <div id="headline-ticker" class="headline-ticker"></div>
 
     <form method="POST" enctype="multipart/form-data" action="/start-summary" id="summary-form">
 
@@ -31,7 +35,7 @@
         <!-- 3단계: 뉴스 입력 선택 (기본 숨김) -->
         <div class="fade-step hidden" id="step-3">
             <h3>📰 뉴스 입력</h3>
-            
+
             <div class="input-choice">
                 <div class="upload-area">
                     <h4>📂 파일 업로드 (.txt)</h4>
@@ -40,18 +44,18 @@
                     </label>
                     <input id="file-upload" type="file" name="file" accept=".txt" style="display: none;">
                 </div>
-        
+
                 <br>
                 <div class="or-text">또는</div>
-        
+
                 <div class="textarea-area">
                     <h4>✍️ 텍스트 직접 입력</h4>
                     <textarea name="text_content" rows="6" placeholder="뉴스 본문을 입력하세요..."></textarea>
                 </div>
-        
+
                 <br>
                 <div class="or-text">또는</div>
-        
+
                 <div class="url-input-area">
                     <h4>🔗 뉴스 URL 입력</h4>
                     <input type="text" name="news_url" placeholder="https://n.news.naver.com/article/..." style="width:100%; padding: 10px; font-size: 14px;">
@@ -65,14 +69,16 @@
                         </div>
                     </div>
                 </div>
-        
+
                 <!-- 파일 업로드 이름 표시용 -->
                 <div id="file-name" class="file-name"></div>
-        
+
                 <!-- 텍스트 입력 글자수 표시용 -->
                 <div id="text-count" class="text-count">0자 입력됨</div>
             </div>
         </div>
+
+        <h3 id="typing-text"><span id="typed-text"></span><span id="cursor">|</span></h3>
 
         <!-- 최종 요약 시작 버튼 -->
         <div class="start-btn">
@@ -150,6 +156,36 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     typeEffect();
+});
+
+/* --- 뉴스 헤드라인 티커 JS --- */
+let headlines = [];
+let idx = 0;
+
+function fetchHeadlines() {
+    fetch('/api/latest-headlines')
+        .then(res => res.json())
+        .then(data => {
+            // [{title, link}, ...] 형태
+            headlines = data.headlines;
+            idx = 0;
+            showNextHeadline();
+        });
+}
+
+function showNextHeadline() {
+    if (headlines.length === 0) return;
+    const ticker = document.getElementById('headline-ticker');
+    const headline = headlines[idx];
+    // a 태그로 감싸서 클릭 시 새 창에서 원문 열기
+    ticker.innerHTML = `<a href="${headline.link}" target="_blank" style="color:inherit; text-decoration:none;">${headline.title}</a>`;
+    idx = (idx + 1) % headlines.length;
+    setTimeout(showNextHeadline, 5000);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    fetchHeadlines();
+    setInterval(fetchHeadlines, 60000);
 });
 </script>
 </div>
