@@ -7,6 +7,7 @@ from datetime import datetime
 from summarizer.summarizer import summarize_news  # 전략 기반 요약기 사용
 from extractors.naver_parser_naver import NaverNewsExtractor
 from extractors.naver_parser_newdaily import NewDailyNewsExtractor
+from extractors.naver_parser_foxnews import FoxNewsExtractor
 from dotenv import load_dotenv
 from news_headlines import get_latest_headlines
 load_dotenv()
@@ -26,8 +27,8 @@ def extract_news_by_source(url, source):
         return NaverNewsExtractor().extract(url)
     elif source == "newdaily":
         return NewDailyNewsExtractor().extract(url)
-    elif source == "news2":
-        return "뉴스2 파서 미구현"
+    elif source == "foxnews":
+        return FoxNewsExtractor().extract(url)
     else:
         return "지원하지 않는 언론사입니다."
 
