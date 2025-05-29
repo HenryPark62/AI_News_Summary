@@ -88,6 +88,7 @@ news_summary/
 ├── 중간보고서.md                    # 프로젝트 중간 보고서
 ├── README.md                    # 프로젝트 설명 파일
 ├── app.py                               # Flask 서버 메인 파일
+├── news_headlines.py           # 뉴스 헤드라인 송출 파일
 ├── test_news.txt                     # 테스트용 입력 파일
 │
 ├── static/                          # 정적 파일 (CSS, JS)
@@ -100,7 +101,8 @@ news_summary/
 ├── extractors/                                 # 언론사별 요약 알고리즘 폴더 (URL 입력 전용)
 │   ├── base_extractor.py               # base 추출기 (템플릿 메소드)
 │   ├── news_parser_naver.py       # 네이버 뉴스 본문 파싱 파일
-│   ├── news_parser_newdaily1.py        # 뉴데일리 본문 파싱 파일 
+│   ├── news_parser_annnews.py        # ANN news 본문 파싱 파일 
+│   ├── news_parser_foxnews.py        # Fox news 본문 파싱 파일 
 │   └──__pycache__/                              # 파이썬 캐시 폴더
 │
 ├── templates/                         # Flask 템플릿 폴더
@@ -137,6 +139,13 @@ news_summary/
 
 * 피드백 반영 및 추가 기능 완성
 * 향후 확장 방향성 (예: 사용자 맞춤형 뉴스 추천, 다양한 요약 모델 적용) 구체화 및 MVP에 대해 함께 제시할 예정입니다.
+
+---
+
+## 🚀 프로젝트 결과 및 최종 발표 (6/12)
+
+* 중간발표 이후 피드백 반영, 개선점 위주로 발표
+* News.ai의 기능 구현, 비즈니스 모델링에 대해 발표
 
 ---
 
