@@ -6,7 +6,8 @@ from abc import ABC, abstractmethod
 from .summarizer_strategy import SummarizerStrategy
 from .perplexity_proxy import PerplexityProxy
 from .together_proxy import TogetherProxy
-# 필요 시 다른 요약기 프록시도 import (e.g., OpenAIProxy)
+# 필요 시 다른 요약기 프록시도 import 
+
 
 # 추상 팩토리
 class SummarizerFactory(ABC):

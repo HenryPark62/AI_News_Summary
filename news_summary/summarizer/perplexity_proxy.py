@@ -1,6 +1,8 @@
 # summarizer/perplexity_proxy.py
 
-# ✅ Proxy: Perplexity API 호출에 대한 대리자
+# Proxy: PerplexitySummarizer API 호출에 대한 대리자. 호출 전 인증 및 로깅 처리
+
+
 import os
 from .summarizer_strategy import SummarizerStrategy
 from .perplexity_summarizer import PerplexitySummarizer

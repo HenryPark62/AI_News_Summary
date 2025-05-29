@@ -1,6 +1,6 @@
 # summarizer/summarizer_strategy.py
 
-# 전략 패턴의 핵심 인터페이스
+# 전략 패턴 인터페이스
 from abc import ABC, abstractmethod
 
 class SummarizerStrategy(ABC):

@@ -5,12 +5,14 @@ import smtplib
 from email.message import EmailMessage
 from datetime import datetime
 from summarizer.summarizer import summarize_news  # 전략 기반 요약기 사용
-from extractors.naver_parser_naver import NaverNewsExtractor
-from extractors.naver_parser_annnews import AnnNewsExtractor
-from extractors.naver_parser_foxnews import FoxNewsExtractor
+from extractors.news_parser_naver import NaverNewsExtractor
+from extractors.news_parser_annnews import AnnNewsExtractor
+from extractors.news_parser_foxnews import FoxNewsExtractor
 from dotenv import load_dotenv
 from news_headlines import get_latest_headlines
+
 load_dotenv()
+
 
 app = Flask(__name__)
 UPLOAD_FOLDER = './uploads'

@@ -1,5 +1,6 @@
 # summarizer/together_proxy.py
-# Proxy: TogetherSummarizer 호출 전 인증 및 로깅 처리
+
+# Proxy: TogetherSummarizer API 호출에 대한 대리자. 호출 전 인증 및 로깅 처리
 
 import os
 from .summarizer_strategy import SummarizerStrategy

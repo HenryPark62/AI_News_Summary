@@ -1,7 +1,7 @@
 # extractors/news_parser_naver.py
 
 # Naver 뉴스 기사 전용 파서 (BaseNewsExtractor 상속)
-# 네이버 제휴 언론사 (구독 가능한)는 html이 모두 공통된 구조라 하나의 extractors로 추출 가능합니다.
+# 네이버 제휴 언론사 (구독 가능한)는 html이 모두 공통된 구조라 하나의 extractors로 추출 가능.
 
 import requests
 from bs4 import BeautifulSoup
