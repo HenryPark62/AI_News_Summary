@@ -6,7 +6,7 @@ from email.message import EmailMessage
 from datetime import datetime
 from summarizer.summarizer import summarize_news  # 전략 기반 요약기 사용
 from extractors.naver_parser_naver import NaverNewsExtractor
-from extractors.naver_parser_newdaily import NewDailyNewsExtractor
+from extractors.naver_parser_annnews import AnnNewsExtractor
 from extractors.naver_parser_foxnews import FoxNewsExtractor
 from dotenv import load_dotenv
 from news_headlines import get_latest_headlines
@@ -25,8 +25,8 @@ progress = {"percentage": 0}
 def extract_news_by_source(url, source):
     if source == "naver":
         return NaverNewsExtractor().extract(url)
-    elif source == "newdaily":
-        return NewDailyNewsExtractor().extract(url)
+    elif source == "annnews":
+        return AnnNewsExtractor().extract(url)
     elif source == "foxnews":
         return FoxNewsExtractor().extract(url)
     else:
