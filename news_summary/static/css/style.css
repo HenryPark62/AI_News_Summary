@@ -380,8 +380,6 @@ h3 {
     background-color: #0056b3;
 }
 
-
-/* 뉴스 헤드라인 */ 
 .headline-ticker {
     display: block;
     font-size: 1.1em;
@@ -391,4 +389,87 @@ h3 {
     text-overflow: ellipsis;
     max-width: 480px;
     margin: 0 auto 10px auto;
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 10px;
+        margin: 30px auto;
+        max-width: 100%;
+    }
+
+    .main-title {
+        font-size: 18px;
+        gap: 6px;
+    }
+
+    .emoji-large {
+        font-size: 40px;
+    }
+
+    .title-text {
+        font-size: 38px;
+    }
+
+    h1, h2, h3, h4 {
+        font-size: 1.1em;
+        margin-bottom: 10px;
+    }
+
+    textarea,
+    input[type="text"] {
+        font-size: 15px;
+        padding: 8px;
+    }
+
+    .custom-file-upload {
+        font-size: 13px;
+        padding: 7px 12px;
+    }
+
+    .headline-ticker {
+        max-width: 98vw;
+        font-size: 1em;
+    }
+
+    .start-btn button,
+    .action-buttons button,
+    .cancel-btn button {
+        width: 100%;
+        font-size: 16px;
+        padding: 12px 0;
+    }
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 10px;
+        margin: 20px auto;
+        max-width: 100%;
+    }
+    h1, h2 {
+        font-size: 1.2em;
+    }
+    #summary-text {
+        font-size: 1em;
+        padding: 12px;
+    }
+    #bar-chart {
+        max-width: 100%;
+        height: auto !important;
+    }
+    .action-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .action-buttons button {
+        width: 100%;
+        font-size: 16px;
+        padding: 12px 0;
+    }
+    #email-input {
+        width: 100%;
+        font-size: 15px;
+        padding: 10px;
+    }
 }
