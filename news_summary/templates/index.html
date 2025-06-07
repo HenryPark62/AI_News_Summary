@@ -2,6 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>News.ai</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
@@ -14,7 +15,7 @@
     </h1>
 
     <h3 id="typing-text"><span id="typed-text"></span><span id="cursor">|</span></h3>
-    
+
     <div id="headline-ticker" class="headline-ticker"></div>
 
     <form method="POST" enctype="multipart/form-data" action="/start-summary" id="summary-form">
