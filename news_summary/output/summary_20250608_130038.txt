@@ -1,0 +1,1 @@
+[Together API 오류] 401 Client Error: Unauthorized for url: https://api.together.xyz/v1/chat/completions

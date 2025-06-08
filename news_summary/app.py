@@ -1,6 +1,8 @@
 # app.py (정리된 버전)
-from flask import Flask, request, render_template, send_file, redirect, url_for, jsonify
+from flask import Flask, request, render_template, send_file, redirect, url_for, jsonify, session
 import os
+os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+import time
 import smtplib
 from email.message import EmailMessage
 from datetime import datetime
@@ -11,16 +13,42 @@ from extractors.news_parser_foxnews import FoxNewsExtractor
 from dotenv import load_dotenv
 from news_headlines import get_latest_headlines
 
+from mail.message import SummarizerSubject
+from google_auth_oauthlib.flow import Flow
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
+import google.oauth2.credentials
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from email.mime.base import MIMEBase
+from email import encoders
+import base64
+
 load_dotenv()
 
 
 app = Flask(__name__)
-UPLOAD_FOLDER = './uploads'
-OUTPUT_FOLDER = './output'
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-os.makedirs(OUTPUT_FOLDER, exist_ok=True)
+app.secret_key = os.urandom(24)  # 세션용 비밀 키
+app.config['UPLOAD_FOLDER'] = './Uploads'
+app.config['OUTPUT_FOLDER'] = './output'
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+os.makedirs(app.config['OUTPUT_FOLDER'], exist_ok=True)
 
 progress = {"percentage": 0}
+
+# OAuth 2.0 설정
+SCOPES = [
+    'https://www.googleapis.com/auth/gmail.send',
+    'https://www.googleapis.com/auth/gmail.readonly'  # getProfile에 필요
+]
+CLIENT_ID = os.getenv('CLIENT_ID')
+CLIENT_SECRET = os.getenv('CLIENT_SECRET')
+REDIRECT_URI = os.getenv('REDIRECT_URI')
+
+if not all([CLIENT_ID, CLIENT_SECRET, REDIRECT_URI]):
+
+      raise ValueError("Missing OAuth credentials in .env")
+
 
 # 템플릿 메서드 기반 뉴스 파서 매핑
 
@@ -51,7 +79,7 @@ def start_summary():
     news_text = ""
 
     if uploaded_file and uploaded_file.filename.endswith('.txt'):
-        path = os.path.join(UPLOAD_FOLDER, uploaded_file.filename)
+        path = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file.filename)
         uploaded_file.save(path)
         with open(path, 'r', encoding='utf-8') as f:
             news_text = f.read().strip()
@@ -67,16 +95,21 @@ def start_summary():
     return start_summarization(news_text, selected_model, selected_style)
 
 def start_summarization(news_text, selected_model, selected_style):
-    import time
+    print(f"Starting summarization: model={selected_model}, style={selected_style}")
     progress["percentage"] = 0
     for i in range(5):
         progress["percentage"] += 10
         time.sleep(0.2)
 
+    print("Calling summarize_news")
     summary = summarize_news(news_text, selected_model, selected_style)
+    print(f"Summary result: {summary[:100]}...")
+    if "API 오류" in summary:
+        print(f"Summary failed: {summary}")
+        return render_template('result.html', error=f"요약 실패: {summary}"), 400
 
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    save_path = os.path.join(OUTPUT_FOLDER, f'summary_{timestamp}.txt')
+    save_path = os.path.join(app.config['OUTPUT_FOLDER'], f'summary_{timestamp}.txt')
     with open(save_path, 'w', encoding='utf-8') as f:
         f.write(summary)
 
@@ -86,9 +119,11 @@ def start_summarization(news_text, selected_model, selected_style):
         "original_text": news_text,
         "summary_file": save_path,
         "original_length": len(news_text),
-        "summary_length": len(summary)
+        "summary_length": len(summary),
+        "credentials": session.get('credentials')  # 추가
     })
 
+    print("Summarization completed")
     return redirect(url_for('result'))
 
 @app.route('/progress')
@@ -102,9 +137,10 @@ def result():
             'result.html',
             summary_result=progress["summary"],
             original_length=progress["original_length"],
-            summary_length=progress["summary_length"]
+            summary_length=progress["summary_length"],
+            message=request.args.get('message')
         )
-    return "요약 결과가 없습니다.", 404
+    return render_template('result.html', error="요약 결과가 없습니다."), 404
 
 @app.route('/download-summary')
 def download_summary():
@@ -112,36 +148,112 @@ def download_summary():
         return send_file(progress["summary_file"], as_attachment=True)
     return "요약 결과가 없습니다.", 404
 
-@app.route('/send-email', methods=['POST'])
-def send_email_route():
-    data = request.get_json()
-    receiver_email = data.get('email')
+@app.route('/login')
+def login():
+    flow = Flow.from_client_config(
+        {
+            "web": {
+                "client_id": CLIENT_ID,
+                "client_secret": CLIENT_SECRET,
+                "redirect_uris": [REDIRECT_URI],
+                "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+                "token_uri": "https://oauth2.googleapis.com/token"
+            }
+        },
+        scopes=SCOPES
+    )
+    flow.redirect_uri = REDIRECT_URI
+    authorization_url, state = flow.authorization_url(
+        access_type='offline',
+        include_granted_scopes='true',
+        prompt='consent'
+    )
+    session['state'] = state
+    return redirect(authorization_url)
 
+@app.route('/oauth2callback')
+def oauth2callback():
+    state = session.get('state')
+    flow = Flow.from_client_config(
+        {
+            "web": {
+                "client_id": CLIENT_ID,
+                "client_secret": CLIENT_SECRET,
+                "redirect_uris": [REDIRECT_URI],
+                "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+                "token_uri": "https://oauth2.googleapis.com/token"
+            }
+        },
+        scopes=SCOPES,
+        state=state
+    )
+    flow.redirect_uri = REDIRECT_URI
+    authorization_response = request.url
+    flow.fetch_token(authorization_response=authorization_response)
+    credentials = flow.credentials
+    session['credentials'] = {
+        'token': credentials.token,
+        'refresh_token': credentials.refresh_token,
+        'token_uri': credentials.token_uri,
+        'client_id': credentials.client_id,
+        'client_secret': credentials.client_secret,
+        'scopes': credentials.scopes
+    }
+    return redirect(url_for('result', message="Gmail 인증 성공"))
+
+@app.route('/send-email', methods=['GET', 'POST'])
+def send_email():
+    # GET 요청 처리 (예: 인증 상태 확인)
+    if request.method == 'GET':
+        return redirect(url_for('result', message="로그인 성공"))
+    
+    if 'credentials' not in session:
+        return redirect(url_for('login'))
+    credentials = session['credentials']
     try:
-        sender_email = os.getenv("SENDER_EMAIL")
-        sender_password = os.getenv("SENDER_PASSWORD")
+        service = build('gmail', 'v1', credentials=google.oauth2.credentials.Credentials(**credentials))
+        # 사용자 이메일 가져오기
+        profile = service.users().getProfile(userId='me').execute()
+        user_email = profile['emailAddress']
+        print(f"Sending email to: {user_email}")
 
-        msg = EmailMessage()
+        # 이메일 메시지 생성
+        msg = MIMEMultipart()
         msg['Subject'] = '[뉴스 요약 서비스] 요약본을 보내드립니다.'
-        msg['From'] = sender_email
-        msg['To'] = receiver_email
-        msg.set_content(f"""안녕하세요, 요청하신 뉴스 요약본을 보내드립니다.\n\n요약 내용:\n{progress.get('summary', '')}""")
+        msg['From'] = user_email
+        msg['To'] = user_email
 
-        if "summary_file" in progress:
-            with open(progress["summary_file"], 'rb') as f:
-                file_data = f.read()
-                file_name = os.path.basename(progress["summary_file"])
-                msg.add_attachment(file_data, maintype='application', subtype='octet-stream', filename=file_name)
+        body = f"안녕하세요, 요청하신 뉴스 요약본을 보내드립니다.\n요약 내용:\n{progress['summary']}"
+        msg.attach(MIMEText(body, 'plain', 'utf-8'))
 
-        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
-            smtp.login(sender_email, sender_password)
-            smtp.send_message(msg)
+        with open(progress['summary_file'], 'rb') as f:
+            part = MIMEBase('application', 'octet-stream')
+            part.set_payload(f.read())
+        encoders.encode_base64(part)
+        part.add_header(
+            'Content-Disposition',
+            f'attachment; filename={os.path.basename(progress["summary_file"])}'
+        )
+        msg.attach(part)
 
-        return jsonify({"success": True})
+        # Gmail API로 이메일 전송
+        raw = base64.urlsafe_b64encode(msg.as_bytes()).decode('utf-8')
+        message = {'raw': raw}
+        service.users().messages().send(userId='me', body=message).execute()
+        print("Email sent successfully")
+
+        # SummarizerSubject 알림 (옵션)
+        summarizer_subject = SummarizerSubject()
+        summarizer_subject.notify(progress['summary'], progress['summary_file'])
+
+        return redirect(url_for('result', message="이메일 발송 성공"))
+    except HttpError as e:
+        print(f"[send_email] Gmail API 오류: {str(e)}")
+        return render_template('result.html', error=f"이메일 발송 실패: {str(e)}"), 500
     except Exception as e:
-        print(e)
-        return jsonify({"success": False})
-
+        print(f"[send_email] 오류: {str(e)}")
+        return render_template('result.html', error=f"이메일 발송 실패: {str(e)}"), 500
+        
 @app.route('/api/latest-headlines')
 def latest_headlines():
     headlines = get_latest_headlines()
