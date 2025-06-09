@@ -20,6 +20,7 @@
 | :--------------------------------- | :------------------------------ | :-------------------------------------------------------- |
 | **추상 팩토리 패턴** (Abstract Factory)   | 뉴스 요약 생성기 (Perplexity.ai, Together.ai) | 다양한 요약 알고리즘을 선택적으로 적용 가능<br>요약 방식 변경 시 코드 수정 최소화          |        |
 | **MVC 패턴** (Model-View-Controller) | 웹 구조화 (HTML, CSS)             | Model, View, Controller 분리<br>유지보수성과 확장성 향상  |
+| **옵저버 패턴** (Observer)              | 메일 전송 성공/실패 알림 처리               | 메일 전송 결과를 이벤트 기반으로 사용자에게 전달<br>발송 로직과 알림 로직을 분리           |
 | **전략 패턴** (Strategy)               | 뉴스 요약 모델 선택 처리                  | 실행 시점에 다양한 요약 모델(Perplexity.ai, Together.ai 등)을 선택 가능, 요약 모델 교체 용이 |
 | **프록시 패턴** (Proxy)                 | 외부 API(Perplexity API 등) 호출 최적화       | API 호출 전에 요청 제한, 캐싱 등 부가기능 추가<br>API 부하 감소                |
 | **템플릿 메서드 패턴** (Template Method)   | 뉴스 크롤링 프로세스 기본 구조 설계            | 기본 크롤링 로직은 고정하고, 사이트별 차이만 하위 클래스에서 구현, 다양한 언론사 대응 가능    |
@@ -126,7 +127,14 @@ news_summary/
 │   ├── summarizer.py                       # Summarizer  메인 함수
 │   ├── summarizer_factory.py           # Summarizer 팩토리
 │   ├── summarizer_strategy.py        # Summarizer 추상 클래스 (전략 패턴)
+│   ├── send.py        # 메일 전송 로직 (옵저버 패턴)
 │   └──__pycache__/                        # 파이썬 캐시 폴더
+│
+├── mali/                      # 메일 관련
+│   ├── __init__.py
+│   ├── message.py          # 메일 전송 알림 (옵저버 패턴)
+│   └──__pycache__/                        # 파이썬 캐시 폴더
+│
 │
 ├── uploads/                         # 업로드된 뉴스 파일 저장 폴더
 ├── output/                          # 요약 결과 저장 폴더
