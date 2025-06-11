@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Summarizer - 뉴스 요약 서비스</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/homestyle.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1 class="main-title">
+            <span class="title-text">News Summarizer</span>
+            <span class="emoji-large">📰</span>
+        </h1>
+        <p class="subtitle">복잡한 뉴스를 간단히 요약하여 Gmail로 받아보세요!</p>
+
+        <section class="home-section">
+            <h2>News Summarizer란?</h2>
+            <p>News Summarizer는 최신 뉴스 기사를 빠르게 요약하고, 사용자의 Gmail 계정으로 요약본을 전송하는 무료 서비스입니다. 바쁜 일상 속에서 핵심 정보만 간편하게 확인하세요.</p>
+        </section>
+
+        <section class="home-section">
+            <h2>주요 기능</h2>
+            <ul>
+                <li>📰 다양한 뉴스 소스(Naver, Fox News 등) 지원</li>
+                <li>✂️ AI 기반 정확한 요약</li>
+                <li>📧 Gmail로 요약본 즉시 전송</li>
+                <li>📊 요약 전후 길이 비교 차트 제공</li>
+            </ul>
+        </section>
+
+        <section class="home-section">
+            <h2>시작하기</h2>
+            <p>지금 바로 뉴스를 요약해 보세요! 아래 버튼을 클릭하여 서비스를 시작하세요.</p>
+            <a href="{{ url_for('index') }}" class="btn">서비스 시작하기</a>
+        </section>
+
+        <section class="home-section">
+            <h2>문의</h2>
+            <p>궁금한 점이 있으시면 언제든 연락 주세요: <a href="mailto:support@yourdomain.com">support@yourdomain.com</a></p>
+        </section>
+
+        <footer>
+            <p>
+                <a href="{{ url_for('privacy') }}">개인정보처리방침</a> |
+                <a href="{{ url_for('terms') }}">이용약관</a>
+            </p>
+            <p>© 2025 News Summarizer. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>

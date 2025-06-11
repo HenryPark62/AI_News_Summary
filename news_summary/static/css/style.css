@@ -474,7 +474,88 @@ h3 {
     }
 }
 
-/* 버튼 스타일 */
+/* footer */
+section {
+    margin: 30px 0;
+    text-align: left;
+}
+section h2 {
+    font-size: 1.8em;
+    color: #333;
+    margin-bottom: 10px;
+}
+section p {
+    font-size: 1.1em;
+    color: #555;
+    line-height: 1.6;
+}
+section ul {
+    list-style: none;
+    padding: 0;
+}
+section ul li {
+    font-size: 1.1em;
+    margin: 10px 0;
+    padding-left: 20px;
+    position: relative;
+}
+section ul li:before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #007bff;
+}
+.subtitle {
+    font-size: 1.5em;
+    color: #555;
+    margin-bottom: 20px;
+    text-align: center;
+}
+footer {
+    margin-top: 40px;
+    text-align: center;
+    font-size: 0.9em;
+    color: #777;
+    padding: 20px 0;
+    border-top: 1px solid #ddd;
+}
+footer a {
+    color: #007bff;
+    text-decoration: none;
+    margin: 0 10px;
+}
+footer a:hover {
+    text-decoration: underline;
+    color: #0056b3;
+}
+footer p {
+    margin: 5px 0;
+}
+@media (max-width: 600px) {
+    .container {
+        padding: 10px;
+        margin: 20px auto;
+        max-width: 100%;
+    }
+    section h2 {
+        font-size: 1.5em;
+    }
+    section p, section ul li {
+        font-size: 1em;
+    }
+    .subtitle {
+        font-size: 1.2em;
+    }
+    footer {
+        font-size: 0.8em;
+        padding: 15px 0;
+    }
+    footer a {
+        margin: 0 5px;
+    }
+}
+
+/* button */
 .btn {
     padding: 12px 30px;
     background-color: #007bff;
@@ -484,5 +565,9 @@ h3 {
     border-radius: 8px;
     cursor: pointer;
     margin: 5px;
-    display: inline-block; /* 버튼이 인라인으로 잘 맞도록 */
+    display: inline-block;
+    text-decoration: none;
+}
+.btn:hover {
+    background-color: #0056b3;
 }

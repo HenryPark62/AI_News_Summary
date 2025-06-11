@@ -1,0 +1,198 @@
+/* 기본 설정 */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* 컨테이너 */
+.container {
+    width: 90%;
+    max-width: 800px;
+    margin: 80px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+h1, h2 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* 메인 타이틀 */
+.main-title {
+    font-size: 30px;
+    flex-direction: column; /* 세로 배치 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.emoji-large {
+    font-size: 70px;
+    animation: float 1.9s ease-in-out infinite;
+}
+
+.title-text {
+    font-size: 110px;
+    font-weight: bold;
+    color: #222;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-6px); }
+    100% { transform: translateY(0px); }
+}
+
+/* 서브타이틀 */
+.subtitle {
+    font-size: 1.5em;
+    color: #555;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* 섹션 공통 스타일 */
+section {
+    margin: 30px 0;
+}
+section h2 {
+    font-size: 1.8em;
+    color: #333;
+    margin-bottom: 10px;
+}
+section p {
+    font-size: 1.1em;
+    color: #555;
+    line-height: 1.6;
+}
+section ul {
+    list-style: none;
+    padding: 0;
+}
+section ul li {
+    font-size: 1.1em;
+    margin: 10px 0;
+    padding-left: 20px;
+    position: relative;
+}
+section ul li:before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #007bff;
+}
+
+/* 버튼 */
+.btn {
+    padding: 12px 30px;
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin: 5px;
+    display: inline-block;
+    text-decoration: none;
+}
+.btn:hover {
+    background-color: #0056b3;
+}
+
+/* 푸터 */
+footer {
+    margin-top: 40px;
+    text-align: center;
+    font-size: 0.9em;
+    color: #777;
+    padding: 20px 0;
+    border-top: 1px solid #ddd;
+}
+footer a {
+    color: #007bff;
+    text-decoration: none;
+    margin: 0 10px;
+}
+footer a:hover {
+    text-decoration: underline;
+    color: #0056b3;
+}
+footer p {
+    margin: 5px 0;
+}
+
+/* home.html 전용 스타일 */
+.home-section {
+    text-align: center;
+}
+.home-section p {
+    margin: 0 auto;
+    max-width: 750px;
+}
+.home-section ul {
+    display: inline-block;
+    text-align: left;
+}
+.home-section .btn {
+    margin: 20px auto;
+}
+
+/* privacy.html, terms.html 전용 스타일 */
+.privacy-section, .terms-section {
+    text-align: left;
+    margin-left: 65px;
+    margin-right: 60px;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 600px) {
+    .container {
+        padding: 10px;
+        margin: 20px auto;
+        max-width: 100%;
+    }
+    .main-title {
+        font-size: 18px;
+        gap: 6px;
+    }
+    .emoji-large {
+        font-size: 40px;
+    }
+    .title-text {
+        font-size: 38px;
+    }
+    h1, h2 {
+        font-size: 1.2em;
+    }
+    section h2, .home-section h2, .privacy-section h2, .terms-section h2 {
+        font-size: 1.5em;
+    }
+    section p, .home-section p, .privacy-section p, .terms-section p,
+    section ul li, .home-section ul li, .privacy-section ul li, .terms-section ul li {
+        font-size: 1em;
+    }
+    .subtitle {
+        font-size: 1.2em;
+    }
+    footer {
+        font-size: 0.8em;
+        padding: 15px 0;
+    }
+    footer a {
+        margin: 0 5px;
+    }
+}

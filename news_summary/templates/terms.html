@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이용약관 - News Summarizer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/homestyle.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>이용약관</h1>
+        <p>News Summarizer(이하 "서비스")를 이용하기 전에 본 이용약관을 주의 깊게 읽어주세요. 서비스를 이용함으로써 본 약관에 동의한 것으로 간주됩니다.</p>
+        
+        <section class="privacy-section">
+            <h2>1. 서비스 개요</h2>
+            <p>News Summarizer는 뉴스 기사를 요약하고 사용자의 Gmail 계정으로 요약본을 전송하는 무료 서비스입니다.</p>
+        </section>
+        
+        <section class="privacy-section">
+            <h2>2. 이용 조건</h2>
+            <p>사용자는 다음 조건을 준수해야 합니다:</p>
+            <ul>
+                <li>서비스를 불법적인 목적으로 사용하지 않습니다.</li>
+                <li>타인의 저작권을 침해하는 콘텐츠를 업로드하지 않습니다.</li>
+                <li>서비스의 정상적인 운영을 방해하는 행위를 하지 않습니다.</li>
+            </ul>
+        </section>
+        
+        <section class="privacy-section">
+            <h2>3. 책임 제한</h2>
+            <p>서비스는 "있는 그대로" 제공되며, 다음과 같은 경우 책임을 지지 않습니다:</p>
+            <ul>
+                <li>서비스 중단 또는 데이터 손실로 인한 손해.</li>
+                <li>사용자가 제공한 부정확한 정보로 인한 문제.</li>
+                <li>외부 요인(예: 네트워크 장애)으로 인한 서비스 지연.</li>
+            </ul>
+        </section>
+        
+        <section class="privacy-section">
+            <h2>4. 계정 종료</h2>
+            <p>다음 경우 사용자의 서비스 이용이 제한 또는 종료될 수 있습니다:</p>
+            <ul>
+                <li>본 약관 위반.</li>
+                <li>불법 행위 또는 부적절한 사용.</li>
+                <li>서비스 운영자의 판단에 따라 필요한 경우.</li>
+            </ul>
+        </section>
+        
+        <section class="privacy-section">
+            <h2>5. 분쟁 해결</h2>
+            <p>본 약관은 대한민국 법률에 따라 해석됩니다. 서비스 관련 분쟁은 서울중앙지방법원을 관할 법원으로 합니다.</p>
+        </section>
+        
+        <section class="privacy-section">
+            <h2>6. 문의처</h2>
+            <p>약관 관련 문의는 아래로 연락주세요:</p>
+            <p>이메일: <a href="mailto:iseul0111@gmail.com">iseul0111@gmail.com</a></p>
+        </section>
+        
+        <section class="privacy-section">
+            <h2>7. 약관의 변경</h2>
+            <p>본 약관은 서비스 변경에 따라 수정될 수 있으며, 변경 시 홈페이지에 공지합니다.</p>
+        </section>
+        
+        <p><a href="{{ url_for('home') }}" class="btn">홈으로 돌아가기</a></p>
+    </div>
+</body>
+</html>

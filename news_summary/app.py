@@ -259,5 +259,17 @@ def latest_headlines():
     headlines = get_latest_headlines()
     return jsonify({"headlines": headlines})
 
+@app.route('/home')
+def home():
+    return render_template('home.html')
+
+@app.route('/privacy')
+def privacy():
+    return render_template('privacy.html')
+
+@app.route('/terms')
+def terms():
+    return render_template('terms.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
